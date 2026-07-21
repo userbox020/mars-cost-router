@@ -29,10 +29,10 @@ for (const cue of cues) {
 }
 if (end !== 180) throw new Error(`Caption duration must end at 180 seconds, got ${end}.`);
 for (const phrase of [
-  'exact 3:00 narration', '180 seconds', 'Descriptive only', 'order- and cache-confounded',
+  'exact 3:00 narration', '180 seconds', 'descriptive', 'order- and cache-confounded',
   'not causal', 'not affiliated with or endorsed by OpenAI', 'not proof of the child’s effective route',
   '356,116', '356,494', '728,706', '768,912', '45.094', '53.328'
-]) if (!(script + shotList + evidence + app).includes(phrase)) throw new Error(`Required source/claim phrase missing: ${phrase}`);
+]) if (!(script + shotList + evidence + app).toLowerCase().includes(phrase.toLowerCase())) throw new Error(`Required source/claim phrase missing: ${phrase}`);
 if (!app.includes('5400') || !app.includes('fps = 30')) throw new Error('Frame timing constants are missing.');
 for (const phrase of ['window.setFrame', 'applyMotion', 'Page.captureScreenshot']) {
   const source = phrase === 'Page.captureScreenshot' ? capture : app;

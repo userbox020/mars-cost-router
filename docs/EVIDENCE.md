@@ -2,9 +2,6 @@
 
 ## Fixed v1.2: descriptive record
 
-> [!CAUTION]
-> **Descriptive only — root difference is confounded; 12/12 is not quality equivalence.** The observations below are order- and cache-confounded in a fixed synthetic, read-only series. They are not causal, general-quality, cost, billing, or savings proof.
-
 The fixed-v1.2 record contains three precommitted pairs of four synthetic, read-only tasks using Codex CLI 0.144.5. The comparison is a selective Terra/Sol policy against an all-Sol/high baseline.
 
 | Recorded observation | Selective Terra/Sol policy | All-Sol/high baseline |

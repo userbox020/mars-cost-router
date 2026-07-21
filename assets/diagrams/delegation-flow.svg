@@ -1,1 +1,33 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc"><title id="title">Mars Cost Router delegation flow</title><desc id="desc">The Mars policy informs the root, which writes explicit settings for bounded children and verifies returned work. Native metadata is inspected as evidence when available.</desc><defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0L9 3L0 6z" fill="#52667B"/></marker></defs><rect width="1200" height="520" rx="24" fill="#F8F4EC"/><g font-family="Arial,sans-serif" text-anchor="middle"><g stroke-width="3"><rect x="45" y="190" width="200" height="100" rx="16" fill="#E8EEE7" stroke="#536B55"/><rect x="350" y="190" width="180" height="100" rx="16" fill="#F7F1E6" stroke="#A66C31"/><rect x="650" y="95" width="190" height="90" rx="16" fill="#EAF0F5" stroke="#496178"/><rect x="650" y="325" width="190" height="90" rx="16" fill="#EAF0F5" stroke="#496178"/><rect x="950" y="190" width="200" height="100" rx="16" fill="#F7F1E6" stroke="#A66C31"/><rect x="350" y="390" width="180" height="75" rx="16" fill="#F5E8E2" stroke="#AD4C32"/></g><g fill="#17212B" font-size="21" font-weight="700"><text x="145" y="230">Mars policy</text><text x="145" y="258" font-size="16" font-weight="400">three requested lanes</text><text x="440" y="248">Root agent</text><text x="745" y="135">Bounded child</text><text x="745" y="365">Bounded child</text><text x="1050" y="230">Root review</text><text x="1050" y="258" font-size="16" font-weight="400">and verification</text><text x="440" y="422">Native metadata</text><text x="440" y="446" font-size="15" font-weight="400">when available</text></g></g><g fill="none" stroke="#52667B" stroke-width="4" marker-end="url(#a)"><path d="M245 240H350"/><path d="M530 220L650 145"/><path d="M530 260L650 365"/><path d="M840 145L950 220"/><path d="M840 365L950 260"/></g><path d="M440 390V290" fill="none" stroke="#AD4C32" stroke-width="3" stroke-dasharray="8 7" marker-end="url(#a)"/><g font-family="Arial,sans-serif" fill="#52667B" font-size="15"><text x="548" y="205">writes explicit settings</text><text x="548" y="282">inspect as evidence</text></g><text x="55" y="55" font-family="Georgia,serif" font-size="29" font-weight="700" fill="#17212B">Requested settings flow through the root</text><text x="55" y="82" font-family="Arial,sans-serif" font-size="16" fill="#52667B">No executable hook · no call rewriting · root remains accountable</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
+  <title id="title">Mars Cost Router delegation flow</title>
+  <desc id="desc">The Mars policy informs the root, which writes explicit settings for bounded children and verifies returned work. Native metadata is inspected as evidence when available.</desc>
+  <defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0L9 3L0 6z" fill="#52667B"/></marker></defs>
+  <rect width="1200" height="520" rx="24" fill="#F8F4EC"/>
+  <g font-family="Arial, sans-serif" text-anchor="middle">
+    <g stroke-width="3">
+      <rect x="45" y="190" width="200" height="100" rx="16" fill="#E8EEE7" stroke="#536B55"/>
+      <rect x="350" y="190" width="180" height="100" rx="16" fill="#F7F1E6" stroke="#A66C31"/>
+      <rect x="650" y="95" width="190" height="90" rx="16" fill="#EAF0F5" stroke="#496178"/>
+      <rect x="650" y="325" width="190" height="90" rx="16" fill="#EAF0F5" stroke="#496178"/>
+      <rect x="950" y="190" width="200" height="100" rx="16" fill="#F7F1E6" stroke="#A66C31"/>
+      <rect x="350" y="390" width="180" height="75" rx="16" fill="#F5E8E2" stroke="#AD4C32"/>
+    </g>
+    <g fill="#17212B" font-size="21" font-weight="700">
+      <text x="145" y="230">Mars policy</text><text x="145" y="258" font-size="16" font-weight="400">three requested lanes</text>
+      <text x="440" y="248">Root agent</text>
+      <text x="745" y="135">Bounded child</text><text x="745" y="365">Bounded child</text>
+      <text x="1050" y="230">Root review</text><text x="1050" y="258" font-size="16" font-weight="400">and verification</text>
+      <text x="440" y="422">Native metadata</text><text x="440" y="446" font-size="15" font-weight="400">when available</text>
+    </g>
+  </g>
+  <g fill="none" stroke="#52667B" stroke-width="4" marker-end="url(#a)">
+    <path d="M245 240H350"/><path d="M530 220L650 145"/><path d="M530 260L650 365"/><path d="M840 145L950 220"/><path d="M840 365L950 260"/>
+  </g>
+  <path d="M440 390V290" fill="none" stroke="#AD4C32" stroke-width="3" stroke-dasharray="8 7" marker-end="url(#a)"/>
+  <g font-family="Arial, sans-serif" fill="#52667B" font-size="15">
+    <text x="470" y="118">writes explicit settings</text>
+    <text x="260" y="345">inspect as evidence</text>
+  </g>
+  <text x="55" y="55" font-family="Georgia, serif" font-size="29" font-weight="700" fill="#17212B">Requested settings flow through the root</text>
+  <text x="55" y="82" font-family="Arial, sans-serif" font-size="16" fill="#52667B">No executable hook · no call rewriting · root remains accountable</text>
+</svg>
