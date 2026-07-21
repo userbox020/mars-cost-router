@@ -9,8 +9,7 @@ Mars Cost Router is an instruction-driven Codex plugin for **risk- and
 effort-based bounded subagent delegation**. It presents three explicit request
 lanes—economy, balanced, and premium—so the root can request different model and
 reasoning settings for a bounded lookup than for a security review or difficult
-debugging task. It does not automatically classify tasks, enforce a route, or
-verify which route executed.
+debugging task.
 
 The project is deliberately small. It is a skill, a versioned JSON policy, and
 plugin metadata—not a hidden proxy or runtime control plane. Mars does not
