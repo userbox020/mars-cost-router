@@ -35,7 +35,7 @@ frame identity, clock, and chapter before each screenshot, then fails if the PNG
 are all equal. Captures are kept in ignored `sparse-smoke/` for inspection.
 It also checks the centered caption and main scene viewport bounds at every
 requested frame (2 px tolerance); the selected frames cover the long captions
-at 10, 45, 105, and 118 seconds, plus the late caveat, outro, and final frame.
+at 10, 45, 105, and 118 seconds, plus the late methodology frame, outro, and final frame.
 
 ## GPU capture and encoding
 

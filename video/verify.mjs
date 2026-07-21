@@ -10,38 +10,103 @@ const render = read('render.ps1');
 const captions = read('../demo/CAPTIONS.vtt');
 const script = read('../demo/VIDEO_SCRIPT.md');
 const shotList = read('../demo/SHOT_LIST.md');
-const evidence = read('../docs/EVIDENCE.md');
 const required = [
   '../assets/brand/mars-cost-router-hero.svg',
   '../assets/diagrams/delegation-flow.svg',
   '../assets/evidence/fixed-v1.2-performance.svg',
+  '../assets/evidence/rate-index.svg',
   '../demo/CAPTIONS.vtt', '../demo/VIDEO_SCRIPT.md', '../demo/SHOT_LIST.md', '../docs/EVIDENCE.md'
 ];
 for (const file of required) if (!existsSync(resolve(root, file))) throw new Error(`Missing approved source: ${file}`);
 const cues = [...captions.matchAll(/(\d\d):(\d\d):(\d\d)\.\d{3} --> (\d\d):(\d\d):(\d\d)\.\d{3}\r?\n([^\r\n]+)/g)];
 if (cues.length !== 10) throw new Error(`Expected 10 caption cues, found ${cues.length}.`);
+const appCues = [...app.matchAll(/^\s*\[(\d+),(\d+),"([^"]+)"\],?$/gm)];
+const scriptCues = [...script.matchAll(/^\| ([0-9:]+)–([0-9:]+) \| \d+s \| “([^”]+)” \|$/gm)];
+if (appCues.length !== 10 || scriptCues.length !== 10) throw new Error(`Expected 10 app and script cues, found ${appCues.length} and ${scriptCues.length}.`);
 const seconds = ([h,m,s]) => +h * 3600 + +m * 60 + +s;
+const shortSeconds = value => value.split(':').reduce((total, part) => total * 60 + Number(part), 0);
 let end = 0;
-for (const cue of cues) {
+for (const [index, cue] of cues.entries()) {
   const start = seconds(cue.slice(1,4)), finish = seconds(cue.slice(4,7)), text = cue[7];
   if (start !== end) throw new Error(`Caption gap or overlap at ${text}`);
-  if (!app.includes(text)) throw new Error(`Caption copy is not exact in app.js: ${text}`);
+  const appCue = appCues[index], scriptCue = scriptCues[index];
+  if (+appCue[1] !== start || +appCue[2] !== finish || appCue[3] !== text) throw new Error(`Caption cue ${index + 1} is not exact in app.js.`);
+  if (shortSeconds(scriptCue[1]) !== start || shortSeconds(scriptCue[2]) !== finish || scriptCue[3] !== text) throw new Error(`Caption cue ${index + 1} is not exact in VIDEO_SCRIPT.md.`);
   end = finish;
 }
 const boundaries = [0,12,27,43,58,78,94,110,126,133,140];
 if (end !== 140) throw new Error(`Caption duration must end at 140 seconds, got ${end}.`);
 if (cues.some((cue, index) => seconds(cue.slice(1,4)) !== boundaries[index] || seconds(cue.slice(4,7)) !== boundaries[index + 1])) throw new Error('Caption cues do not match the approved 2:20 boundaries.');
+const synchronizedVideoSources = { app, captions, script };
 for (const phrase of [
-  'exact 2:20 narration', '140 seconds', 'descriptive', 'order- and cache-confounded',
-  'not causal', 'not affiliated with or endorsed by OpenAI', 'not proof of the child’s effective route',
-  '356,116', '356,494', '728,706', '768,912', '45.094', '53.328'
-]) if (!(script + shotList + evidence + app).toLowerCase().includes(phrase.toLowerCase())) throw new Error(`Required source/claim phrase missing: ${phrase}`);
+  'Delegation should be deliberate',
+  'guides explicit model, effort, and context choices',
+  'calls for bounded child tasks',
+  'independent, unofficial delegation policy',
+  'requested model lanes',
+  'instruction-only and fully inspectable',
+  'guides the root to request explicit child settings',
+  'Each lane template calls for',
+  'privacy-safe task label',
+  'requested route intent stays visible for review',
+  'root-owned verification',
+  'final verification',
+  'Remote installation succeeded',
+  'hosted CI passes',
+  'twelve of twelve deterministic checks',
+  'zero observed automatic retries and reroutes',
+  '356,116',
+  '356,494',
+  'minus 0.11 percent',
+  'Using the dated Standard API listed rates',
+  'published comparison indexes Terra at 50 and Sol at 100',
+  'Terra at 50',
+  'Sol at 100',
+  'fixed-series record and dated rate comparison separate',
+  'Requested settings stay explicit and reviewable',
+  'See Evidence for scope and methodology'
+]) {
+  for (const [sourceName, source] of Object.entries(synchronizedVideoSources)) {
+    if (!source.toLowerCase().includes(phrase.toLowerCase())) throw new Error(`Required affirmative video phrase missing from ${sourceName}: ${phrase}`);
+  }
+}
+const videoPresentation = [app, captions, script, shotList].join('\n');
+for (const phrase of ['fixed-series observations', 'dated listed-rate index', 'Evidence link']) if (!shotList.toLowerCase().includes(phrase.toLowerCase())) throw new Error(`METHOD shot list must retain separate public-record framing: ${phrase}`);
+for (const [label, pattern] of [
+  ['optimized routing', /\boptimized routing\b/i],
+  ['faster', /\bfaster\b/i],
+  ['same/equal quality', /\b(?:same|equal)[ -]quality\b/i],
+  ['equivalent quality', /\bequivalent[ -]quality\b/i],
+  ['quality equivalence', /\bquality[ -]equivalence\b/i],
+  ['quality retention', /\bquality[ -]retention\b/i],
+  ['retains quality', /\bretains[ -]quality\b/i],
+  ['quality-compromise claim', /\bwithout compromising[ -]quality\b/i],
+  ['saves', /\bsav(?:e|es|ed|ing|ings)\b/i],
+  ['guaranteed', /\bguaranteed\b/i],
+  ['proven effective route', /\bproven effective route\b/i],
+  ['effective routing verified', /\beffective routing verified\b/i],
+  ['effective route confirmed', /\beffective route confirmed\b/i],
+  ['effective model confirmed', /\beffective model confirmed\b/i],
+  ['reduces tokens', /\breduces tokens\b/i],
+  ['cuts tokens', /\bcuts tokens\b/i],
+  ['lower latency', /\blower latency\b/i],
+  ['improves latency', /\bimproves latency\b/i],
+  ['half price', /\bhalf price\b/i],
+  ['50% cheaper', /\b50\s*%\s*cheaper\b/i],
+  ['lower cost', /\blower cost\b/i],
+  ['lower bill', /\blower bill\b/i],
+  ['cuts cost', /\bcuts cost\b/i],
+  ['bill reduction', /\bbill reduction\b/i],
+  ['billing savings', /\bbilling savings\b/i]
+]) if (pattern.test(videoPresentation)) throw new Error(`Unsupported phrase found in video presentation sources: ${label}`);
+const payloadSource = app.slice(app.indexOf('function payload()'), app.indexOf('function evidence()'));
+if (!payloadSource.includes('Do not delegate or spawn another agent.')) throw new Error('Payload must retain the exact nested-delegation prohibition.');
 if (!app.includes('4200') || !app.includes('duration = 140') || !app.includes('fps = 30')) throw new Error('Frame timing constants are missing.');
 for (const phrase of ['window.setFrame', 'applyMotion', 'Page.captureScreenshot']) {
   const source = phrase === 'Page.captureScreenshot' ? capture : app;
   if (!source.includes(phrase)) throw new Error(`Frame-addressed motion/capture contract missing: ${phrase}`);
 }
-for (const phrase of ['currentFrame=requestedFrame', 'String(currentFrame).padStart(4', 't=currentFrame/fps']) if (!app.replaceAll(' ', '').includes(phrase)) throw new Error(`Exact frame-identity contract missing: ${phrase}`);
+for (const phrase of ['currentFrame=normalizeFrame(Number(n))', 'String(currentFrame).padStart(4', 't=currentFrame/fps']) if (!app.replaceAll(' ', '').includes(phrase)) throw new Error(`Exact frame-identity contract missing: ${phrase}`);
 if (app.includes('return {frame:Math.floor(t*fps)')) throw new Error('setFrame must not recompute integer identity from floating-point time.');
 for (const phrase of ['captionMotion', 'translate(-50%,${y.toFixed(2)}px)', 'captionMotion(presence']) if (!app.includes(phrase)) throw new Error(`Centered caption-motion contract missing: ${phrase}`);
 if (!app.includes('exit=c[1]===duration?1')) throw new Error('The final outro must remain visible through frame 4199.');

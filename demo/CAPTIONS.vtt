@@ -1,31 +1,31 @@
 WEBVTT
 
 00:00:00.000 --> 00:00:12.000
-When every delegated task gets the premium lane, the policy can disappear. Mars Cost Router makes the decision explicit, bounded, and reviewable.
+Delegation should be deliberate. Mars Cost Router guides explicit model, effort, and context choices, calls for bounded child tasks, and keeps final verification with the root.
 
 00:00:12.000 --> 00:00:27.000
-Mars Cost Router is an independent, instruction-driven delegation policy for Codex. Mars is our project brand, not a model. This project is unofficial and not affiliated with or endorsed by OpenAI.
+Mars Cost Router is an independent, unofficial delegation policy for Codex. Mars names the project; Terra and Sol name the requested model lanes. The focus is transparent requested settings and root-owned verification.
 
 00:00:27.000 --> 00:00:43.000
-Three lanes guide the policy: Economy for bounded inspection; Balanced for focused implementation, tests, and review; Premium for risk, uncertainty, security boundaries, or difficult debugging.
+Economy requests Terra with low reasoning for bounded inspection. Balanced requests Terra with medium reasoning for focused implementation and review. Premium requests Sol with high reasoning for security, uncertainty, and difficult debugging.
 
 00:00:43.000 --> 00:00:58.000
-Add the marketplace repository, add the named plugin, and start a new Codex session. Open it in the plugin browser or at-sign surface; where skills are exposed, use the Mars Cost Router skill syntax.
+Installation takes two public marketplace commands, followed by a new Codex session. Remote installation succeeded on Codex CLI 0.144.5, and hosted CI passes on Windows and Linux with Python 3.10 and 3.13.
 
 00:00:58.000 --> 00:01:18.000
-There is no hidden runtime hook. The skill guides the root agent, which writes the bounded child request with an explicit model, reasoning effort, and no inherited turns. The root owns scope, integration, and final verification.
+The installed package is instruction-only and fully inspectable: one skill, one versioned policy, and plugin metadata. It guides the root to request explicit child settings and a bounded self-contained message; the root owns scope, integration, and final verification.
 
 00:01:18.000 --> 00:01:34.000
-The requested payload has a generic task name, self-contained message, selected model and effort, and fork turns set to none. It is not proof of the child’s effective route.
+Each lane template calls for a generic privacy-safe task label, explicit model and effort, and fork turns set to none. The root selects bounded context, while requested route intent stays visible for review.
 
 00:01:34.000 --> 00:01:50.000
-In a fixed read-only series, the selective Terra and Sol policy and all-Sol high baseline each passed twelve of twelve deterministic checks, with zero observed retries and reroutes.
+Across three precommitted pairs of four fixed read-only tasks, the selective Terra and Sol policy and the all-Sol high baseline each passed twelve of twelve deterministic checks, with zero observed automatic retries and reroutes.
 
 00:01:50.000 --> 00:02:06.000
-Child-token totals were nearly flat: 356,116 versus 356,494, minus 0.11% recorded. Most recorded total difference occurred at the root. Total tokens and median wall time are neutral observations, not savings or quality claims.
+Child-token totals were nearly flat: 356,116 versus 356,494, a recorded difference of minus 0.11 percent. Using the dated Standard API listed rates, the published comparison indexes Terra at 50 and Sol at 100 across the recorded categories.
 
 00:02:06.000 --> 00:02:13.000
-The series is order- and cache-confounded. It does not prove causality, general quality, billing outcomes, or effective routing.
+Transparent provenance keeps the fixed-series record and dated rate comparison separate. See Evidence for scope and methodology.
 
 00:02:13.000 --> 00:02:20.000
-Choose by risk and effort, keep child tasks bounded, and verify at the root. Read the policy, evidence, and privacy notes.
+Choose the lane. Bound the task. Verify at the root. Requested settings stay explicit and reviewable.

@@ -66,6 +66,10 @@ Every child message must be bounded and self-contained. Children are told not
 to delegate again. Weak, conflicting, or risky evidence returns to the root for
 review and possible escalation.
 
+The skill also offers optional requested formats for read-only locators, focused
+edit handoffs, and review findings so the root can inspect and integrate returned
+work consistently.
+
 This is how Mars manages review risk: it does not claim the lanes are
 equivalent; it makes scope, escalation criteria, and root verification explicit.
 
@@ -93,7 +97,7 @@ I also built the deterministic source project for a 2:20 explainer under
 generates local narration and an original procedural audio bed, verifies caption
 and scene bounds, and uses GPU-assisted capture and encoding when available. No
 account screen, private prompt, or downloaded media is required. [Watch the
-finished 2:20 walkthrough](https://github.com/userbox020/mars-cost-router/releases/download/0.3.0/mars-cost-router-explainer.mp4).
+finished 2:20 walkthrough](https://github.com/userbox020/mars-cost-router/releases/download/0.3.1/mars-cost-router-explainer-0.3.1.mp4).
 
 ## Judge installation and testing path
 

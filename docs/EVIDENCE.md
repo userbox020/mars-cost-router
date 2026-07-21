@@ -24,6 +24,9 @@ Do not turn this record into a claim of causal efficiency, general quality, equa
 
 The [sanitized fixed-v1.2 machine-readable summary](../public-evidence/fixed-v1.2-summary.json) is the public source for these values. Raw local evidence is not published.
 
+Fixed-v1.2 predates the optional child return contracts in 0.3.1 and does not
+evaluate those requested formats.
+
 ## Dated rate comparison
 
 As of **2026-07-17**, the recorded Standard API rate source lists Terra at a 50 index versus Sol at a 100 index across the recorded categories.

@@ -21,7 +21,7 @@ POLICY_PATH = PLUGIN_ROOT / "policy/default.json"
 SKILL_PATH = PLUGIN_ROOT / "skills/mars-cost-router/SKILL.md"
 FIXED_SUMMARY_PATH = ROOT / "public-evidence/fixed-v1.2-summary.json"
 RATE_INDEX_PATH = ROOT / "public-evidence/rate-index-2026-07-17.json"
-VERSION = "0.3.0"
+VERSION = "0.3.1"
 REPOSITORY_URL = "https://github.com/userbox020/mars-cost-router"
 HOMEPAGE_URL = f"{REPOSITORY_URL}#readme"
 LONG_DESCRIPTION = (
@@ -419,6 +419,72 @@ def _validate_skill(skill: str) -> None:
     for statement in required_claim_boundaries:
         if statement not in normalized:
             raise ValidationError(f"skill is missing required boundary: {statement}")
+
+    customization_index = skill.find("Customize each call as follows:")
+    return_contract_index = skill.find("## Optional child return contracts")
+    review_index = skill.find("## Review and integrate")
+    if min(customization_index, return_contract_index, review_index) < 0:
+        raise ValidationError(
+            "customization, optional child return contracts, and root review sections are required"
+        )
+    if not customization_index < return_contract_index < review_index:
+        raise ValidationError(
+            "optional child return contracts must follow customization and precede root review"
+        )
+    return_contract = skill[return_contract_index:review_index]
+    required_return_contracts = (
+        "These are optional requested formats.",
+        "does not validate or enforce a child response shape",
+        "### Read-only locator",
+        "`relative/path:line — symbol — short finding`",
+        "repository-relative locations",
+        "### Focused edit handoff",
+        "edit handoff or change summary",
+        "changed repository-relative paths",
+        "verification actually run and the observed result",
+        "skipped checks",
+        "remaining risks",
+        "### Review",
+        "findings first",
+        "**critical**, **high**, **medium**, then **low**",
+        "repository-relative location",
+        "concrete impact",
+        "or action",
+        "`No findings`",
+        "verification gaps",
+        "### Clarity and safety override",
+        "Do not force brevity or omit material context",
+        "security",
+        "destructive or production actions",
+        "ambiguity",
+        "conflicting evidence",
+        "missing verification",
+        "required user authorization",
+        "Never include credentials, private prompts",
+        "home-directory paths",
+        "unrelated local details",
+    )
+    normalized_return_contract = re.sub(r"\s+", " ", return_contract)
+    for statement in required_return_contracts:
+        if statement not in normalized_return_contract:
+            raise ValidationError(
+                f"optional child return contracts are missing required guidance: {statement}"
+            )
+    forbidden_return_language = (
+        re.compile(
+            r"(?:\b65\s*%\s*(?:of\s+)?(?:the\s+)?output\b|\boutput\s+(?:at|to)\s+65\s*%)",
+            re.IGNORECASE,
+        ),
+        re.compile(r"\b(?:compressed|optimized)[ -]?output\b", re.IGNORECASE),
+        re.compile(r"\btoken[ -]?saving\b", re.IGNORECASE),
+        re.compile(r"\bsav(?:e|es|ing)\s+tokens?\b", re.IGNORECASE),
+        re.compile(r"\bguaranteed[ -]?output\b", re.IGNORECASE),
+    )
+    for pattern in forbidden_return_language:
+        if pattern.search(return_contract):
+            raise ValidationError(
+                "optional child return contracts contain unsupported output language"
+            )
 
 
 def _validate_fixed_summary(summary: Any) -> None:

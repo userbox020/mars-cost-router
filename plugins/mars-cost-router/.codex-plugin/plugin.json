@@ -1,6 +1,6 @@
 {
   "name": "mars-cost-router",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Skill-directed explicit settings for bounded Codex subagent delegation.",
   "author": {
     "name": "userbox020",

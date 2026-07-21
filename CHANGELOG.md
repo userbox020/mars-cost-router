@@ -2,6 +2,15 @@
 
 All notable changes to this project are documented here.
 
+## 0.3.1 - 2026-07-21
+
+- Add optional requested return shapes for read-only locators, focused edit
+  handoffs, change summaries, and severity-ordered reviews.
+- Refresh the README and 2:20 video presentation with positive, claim-safe copy.
+- Strengthen video-source synchronization and unsupported-claim checks.
+- Preserve the instruction-only package boundary with no hooks, MCP, executable
+  runtime, telemetry, or policy-schema expansion.
+
 ## 0.3.0 - 2026-07-21
 
 - Publish the independent Mars Cost Router package.

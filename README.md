@@ -7,9 +7,9 @@
 
 > **Unofficial:** Mars Cost Router is not affiliated with or endorsed by OpenAI. “Mars” is this project's brand, not a model.
 
-[![Validate](https://github.com/userbox020/mars-cost-router/actions/workflows/validate.yml/badge.svg)](https://github.com/userbox020/mars-cost-router/actions/workflows/validate.yml) ![Version 0.3.0](https://img.shields.io/badge/version-0.3.0-AD4C32?style=flat-square) ![Tested with Codex CLI 0.144.5](https://img.shields.io/badge/tested-Codex%20CLI%200.144.5-27374D?style=flat-square) ![No runtime hooks](https://img.shields.io/badge/runtime-no%20hooks-536B55?style=flat-square) ![MIT](https://img.shields.io/badge/license-MIT-E3B341?style=flat-square)
+[![Validate](https://github.com/userbox020/mars-cost-router/actions/workflows/validate.yml/badge.svg)](https://github.com/userbox020/mars-cost-router/actions/workflows/validate.yml) ![Version 0.3.1](https://img.shields.io/badge/version-0.3.1-AD4C32?style=flat-square) ![Tested with Codex CLI 0.144.5](https://img.shields.io/badge/tested-Codex%20CLI%200.144.5-27374D?style=flat-square) ![Instruction-only](https://img.shields.io/badge/mode-Instruction--only-536B55?style=flat-square) ![MIT](https://img.shields.io/badge/license-MIT-E3B341?style=flat-square)
 
-Mars Cost Router is a small local plugin with a three-lane policy for bounded subagent delegation. It guides the root agent to write explicit child settings. It does not rewrite calls, enforce a route, collect telemetry, or replace root review.
+Mars Cost Router is a small local plugin with a three-lane policy for bounded subagent delegation. It gives the root explicit requested settings, supports bounded self-contained child messages, and keeps integration and verification with the root. The instruction-only policy makes route intent reviewable while the root evaluates returned work and, when available, native runtime metadata.
 
 Project: [userbox020/mars-cost-router](https://github.com/userbox020/mars-cost-router)
 
@@ -26,13 +26,17 @@ Start a **new Codex session**, open the plugin browser or `@` surface, and selec
 
 See the fuller [installation guide](docs/INSTALL.md).
 
-## A policy, not a control plane
+## A reviewable delegation toolkit
 
-| Mars Cost Router does | Mars Cost Router does not |
+| Strength | How it supports a clear handoff |
 | --- | --- |
-| Provides explicit economy, balanced, and premium lane settings | Run executable hooks or rewrite `spawn_agent` calls |
-| Keeps the root responsible for scope, integration, and verification | Enforce model selection or prove effective routing |
-| Requires a bounded child message and no nested delegation | Report billing, ChatGPT credits, or runtime telemetry |
+| **Explicit lane policy** | Economy, balanced, and premium templates make requested model, effort, and context settings visible. |
+| **Bounded handoffs** | Self-contained messages define one objective, scope, acceptance criteria, and a concise return shape. |
+| **Optional return formats** | Requested locator, edit handoff, change-summary, and review shapes make returned evidence easier for the root to inspect and integrate. |
+| **Root-owned integration** | The root reviews child work, resolves conflicts, and runs final verification. |
+| **Inspectable package** | A compact skill and versioned policy make the advisory request shape easy to read and review. |
+| **Privacy-conscious labels** | Generic task labels and sanitized presentation materials reduce unnecessary sensitive context in public-facing examples. |
+| **Verified release path** | Local installation guidance, package validation, and hosted CI provide a direct path to inspect the release. |
 
 ## Three deliberate lanes
 
@@ -50,7 +54,7 @@ Terra is the lower-listed-rate lane under the dated Standard API rate source. Th
   <img src="assets/diagrams/delegation-flow.svg" alt="Delegation flow: policy informs the root; the root makes bounded child calls and verifies returned work." width="1000" />
 </p>
 
-The skill and versioned policy inform the root. The root writes the child request, receives the result, and owns final verification. Native child metadata, when available, is evidence to inspect—not a claim made by this package.
+The skill and versioned policy give the root a clear request shape. The root writes the child request, receives the result, and owns final verification. Native child metadata, when available, gives the root runtime detail to inspect alongside the returned work.
 
 ### Sanitized child request shape
 
@@ -64,13 +68,13 @@ The skill and versioned policy inform the root. The root writes the child reques
 }
 ```
 
-`task_name` is only a generic, privacy-safe label. Do not place prompts, paths, filenames, user data, rationale, credentials, or secrets in it.
+Use `task_name` as a short, generic, privacy-safe label. Put the bounded objective, scope, permissions, acceptance criteria, and return format in `message`; this keeps each handoff clear for the child and reviewable by the root.
 
 ## Watch the 2:20 walkthrough
 
-[Watch the 2:20 walkthrough](https://github.com/userbox020/mars-cost-router/releases/download/0.3.0/mars-cost-router-explainer.mp4) · [Script](demo/VIDEO_SCRIPT.md) · [Captions](demo/CAPTIONS.vtt) · [Recording checklist](demo/RECORDING_CHECKLIST.md) · [Terminal commands](demo/TERMINAL_COMMANDS.md)
+[Watch the 2:20 walkthrough](https://github.com/userbox020/mars-cost-router/releases/download/0.3.1/mars-cost-router-explainer-0.3.1.mp4) · [Script](demo/VIDEO_SCRIPT.md) · [Captions](demo/CAPTIONS.vtt) · [Recording checklist](demo/RECORDING_CHECKLIST.md) · [Terminal commands](demo/TERMINAL_COMMANDS.md)
 
-The walkthrough uses static policy inspection and sanitized examples. It does not expose private prompts, thread IDs, or unredacted evidence.
+The video highlights explicit lanes, bounded requests, inspectable instruction-only architecture, sanitized presentation, verified installation/CI, and the fixed-series record. See Evidence for scope and methodology.
 
 ## Fixed v1.2 descriptive evidence
 
@@ -90,26 +94,26 @@ Three precommitted pairs of four fixed read-only tasks recorded against Codex CL
 | Total tokens | 728,706 | 768,912 |
 | Median wall duration | 45.094 s | 53.328 s |
 
-Child-token totals were nearly flat: **356,116** versus **356,494** (**-0.11% recorded**). Most of the recorded total-token difference occurred at the root; total tokens were **728,706** versus **768,912** (**-5.23% recorded**). These observations are order- and cache-confounded in a fixed read-only suite. They are not causal evidence, a general-quality result, a cost result, a billing result, or a guarantee.
+Both arms recorded **12 / 12** deterministic checks, with zero observed automatic retries and reroutes. Child-token totals were nearly flat: **356,116** versus **356,494** (**-0.11% recorded**). Most of the recorded total-token difference occurred at the root; total tokens were **728,706** versus **768,912** (**-5.23% recorded**). [Evidence](docs/EVIDENCE.md) contains the fixed-series scope, methodology, and claim boundaries.
 
-As of **2026-07-17**, the recorded Standard API rate source listed Terra at a 50 index versus Sol at 100 across the recorded categories. This is a rate comparison only; recheck the source before publishing or making a decision. It excludes ChatGPT credits.
+Mars’s published comparison normalizes dated Standard API listed rates as of **2026-07-17** to Terra **50** and Sol **100**. [Evidence](docs/EVIDENCE.md) covers the source, method, recheck guidance, and the distinction from ChatGPT credits.
 
 <p align="center">
   <img src="assets/evidence/rate-index.svg" alt="Dated Standard API rate index: Terra 50 and Sol 100." width="1000" />
 </p>
 
-Read the sanitized machine-readable summaries: [fixed-v1.2 summary](public-evidence/fixed-v1.2-summary.json) and [rate index](public-evidence/rate-index-2026-07-17.json). These summaries are the public record; raw local evidence is not published. Read definitions, provenance, and limits in [Evidence](docs/EVIDENCE.md). Heldout-v2 is an unexecuted evaluation design with offline evaluator components implemented through Step 3. It is not frozen, authorized, or run and contributes no results here.
+The sanitized machine-readable [fixed-v1.2 summary](public-evidence/fixed-v1.2-summary.json) and [rate index](public-evidence/rate-index-2026-07-17.json) provide the compact public record. [Evidence](docs/EVIDENCE.md) links the definitions, provenance, boundaries, and Heldout-v2 context.
 
-## Limitations
+## Reviewable boundaries
 
-- This is instruction-driven. A root can omit or misapply requested fields.
-- A requested lane is not proof of the child’s effective model or reasoning effort.
-- Availability depends on the account, CLI, and environment.
-- Static validation does not establish runtime behavior, quality, cost, or routing outcomes.
+- Treat lane fields as instruction-driven **requested settings**, with the root checking each pending handoff before it starts.
+- Inspect native child metadata when available to distinguish requested settings from observed runtime detail.
+- Confirm model availability for the account, CLI, and environment before relying on a lane.
+- Use static validation for package conformance and runtime evidence for runtime observations.
 
-## Security and privacy
+## Security and privacy by design
 
-The package has no runtime hooks, executable runtime, receipt store, or mutable project-wide state. Keep child messages scoped, do not put sensitive content in `task_name`, and redact local evidence before sharing it. See [Privacy and security](docs/PRIVACY.md).
+The minimal, inspectable package centers on an instruction skill and versioned policy. Use generic labels, bounded child messages, and sanitized evidence when presenting or sharing work. [Privacy and security guidance](docs/PRIVACY.md) covers safe delegation inputs and evidence hygiene.
 
 ## Development
 

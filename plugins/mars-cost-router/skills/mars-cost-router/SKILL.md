@@ -115,6 +115,42 @@ access credentials, or perform production/destructive work unless the user has
 explicitly authorized that exact action and the root can keep it safe and
 bounded.
 
+## Optional child return contracts
+
+These are optional requested formats. The package does not validate or enforce
+a child response shape. Choose one only when it makes the handoff clearer.
+
+### Read-only locator
+
+For a bounded inspection or lookup, request one result per line as:
+
+`relative/path:line — symbol — short finding`
+
+Use repository-relative locations so the root can inspect each finding directly.
+
+### Focused edit handoff
+
+For implementation work, request an edit handoff or change summary containing:
+
+- changed repository-relative paths;
+- verification actually run and the observed result;
+- skipped checks; and
+- remaining risks.
+
+### Review
+
+Request findings first, ordered **critical**, **high**, **medium**, then **low**.
+Each finding should include a repository-relative location and a concrete impact
+or action. If there are no findings, say `No findings` and identify verification
+gaps.
+
+### Clarity and safety override
+
+Do not force brevity or omit material context for security, destructive or
+production actions, ambiguity, conflicting evidence, missing verification, or
+required user authorization. Never include credentials, private prompts,
+home-directory paths, or unrelated local details.
+
 ## Review and integrate
 
 The root owns scope, integration, conflict resolution, final verification, and

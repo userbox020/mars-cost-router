@@ -4,13 +4,13 @@
 
 | Time | Duration | Spoken copy |
 | --- | ---: | --- |
-| 0:00–0:12 | 12s | “When every delegated task gets the premium lane, the policy can disappear. Mars Cost Router makes the decision explicit, bounded, and reviewable.” |
-| 0:12–0:27 | 15s | “Mars Cost Router is an independent, instruction-driven delegation policy for Codex. Mars is our project brand, not a model. This project is unofficial and not affiliated with or endorsed by OpenAI.” |
-| 0:27–0:43 | 16s | “Three lanes guide the policy: Economy for bounded inspection; Balanced for focused implementation, tests, and review; Premium for risk, uncertainty, security boundaries, or difficult debugging.” |
-| 0:43–0:58 | 15s | “Add the marketplace repository, add the named plugin, and start a new Codex session. Open it in the plugin browser or at-sign surface; where skills are exposed, use the Mars Cost Router skill syntax.” |
-| 0:58–1:18 | 20s | “There is no hidden runtime hook. The skill guides the root agent, which writes the bounded child request with an explicit model, reasoning effort, and no inherited turns. The root owns scope, integration, and final verification.” |
-| 1:18–1:34 | 16s | “The requested payload has a generic task name, self-contained message, selected model and effort, and fork turns set to none. It is not proof of the child’s effective route.” |
-| 1:34–1:50 | 16s | “In a fixed read-only series, the selective Terra and Sol policy and all-Sol high baseline each passed twelve of twelve deterministic checks, with zero observed retries and reroutes.” |
-| 1:50–2:06 | 16s | “Child-token totals were nearly flat: 356,116 versus 356,494, minus 0.11% recorded. Most recorded total difference occurred at the root. Total tokens and median wall time are neutral observations, not savings or quality claims.” |
-| 2:06–2:13 | 7s | “The series is order- and cache-confounded. It does not prove causality, general quality, billing outcomes, or effective routing.” |
-| 2:13–2:20 | 7s | “Choose by risk and effort, keep child tasks bounded, and verify at the root. Read the policy, evidence, and privacy notes.” |
+| 0:00–0:12 | 12s | “Delegation should be deliberate. Mars Cost Router guides explicit model, effort, and context choices, calls for bounded child tasks, and keeps final verification with the root.” |
+| 0:12–0:27 | 15s | “Mars Cost Router is an independent, unofficial delegation policy for Codex. Mars names the project; Terra and Sol name the requested model lanes. The focus is transparent requested settings and root-owned verification.” |
+| 0:27–0:43 | 16s | “Economy requests Terra with low reasoning for bounded inspection. Balanced requests Terra with medium reasoning for focused implementation and review. Premium requests Sol with high reasoning for security, uncertainty, and difficult debugging.” |
+| 0:43–0:58 | 15s | “Installation takes two public marketplace commands, followed by a new Codex session. Remote installation succeeded on Codex CLI 0.144.5, and hosted CI passes on Windows and Linux with Python 3.10 and 3.13.” |
+| 0:58–1:18 | 20s | “The installed package is instruction-only and fully inspectable: one skill, one versioned policy, and plugin metadata. It guides the root to request explicit child settings and a bounded self-contained message; the root owns scope, integration, and final verification.” |
+| 1:18–1:34 | 16s | “Each lane template calls for a generic privacy-safe task label, explicit model and effort, and fork turns set to none. The root selects bounded context, while requested route intent stays visible for review.” |
+| 1:34–1:50 | 16s | “Across three precommitted pairs of four fixed read-only tasks, the selective Terra and Sol policy and the all-Sol high baseline each passed twelve of twelve deterministic checks, with zero observed automatic retries and reroutes.” |
+| 1:50–2:06 | 16s | “Child-token totals were nearly flat: 356,116 versus 356,494, a recorded difference of minus 0.11 percent. Using the dated Standard API listed rates, the published comparison indexes Terra at 50 and Sol at 100 across the recorded categories.” |
+| 2:06–2:13 | 7s | “Transparent provenance keeps the fixed-series record and dated rate comparison separate. See Evidence for scope and methodology.” |
+| 2:13–2:20 | 7s | “Choose the lane. Bound the task. Verify at the root. Requested settings stay explicit and reviewable.” |

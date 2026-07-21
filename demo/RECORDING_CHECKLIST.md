@@ -2,23 +2,25 @@
 
 ## Before recording
 
-- [ ] Use a clean local profile and a read-only workspace.
-- [ ] Confirm the installed plugin name and version without showing account details.
-- [ ] Close terminals, tabs, notifications, and sidebars that can reveal names, paths, IDs, prompts, or tokens.
-- [ ] Use the static policy and sanitized payload; do not need a live model call.
-- [ ] Verify all captions, figures, and caveats against `docs/EVIDENCE.md`.
+- [ ] Use a clean presentation profile, read-only workspace, and sanitized capture data.
+- [ ] Confirm the installed plugin name, version, successful remote installation, and hosted CI matrix.
+- [ ] Prepare sanitized terminal, browser, and payload views containing only generic labels and public information.
+- [ ] Stage the inspectable skill, versioned policy, plugin metadata, and root-owned delegation diagram.
+- [ ] Verify the fixed-series values, rate index, provenance hashes, and Evidence links against `docs/EVIDENCE.md` and `public-evidence/`.
 
 ## During recording
 
 - [ ] Record the official installation commands exactly.
-- [ ] Show plugin browser or `@` discovery only if the local interface exposes it.
-- [ ] Do not present `$mars-cost-router` as a universal UI command; it is skill syntax where that surface exists.
-- [ ] Do not reveal private prompts, thread IDs, local evidence, credentials, or account information.
-- [ ] Say “requested” for payload settings; do not imply effective routing.
+- [ ] Show verified plugin discovery and the Windows/Linux Python 3.10/3.13 CI results clearly.
+- [ ] Present only sanitized examples, generic task labels, public evidence, and reviewed sanitized interface views.
+- [ ] Keep “requested” visible with model, effort, and `fork_turns: "none"` so route intent remains inspectable.
+- [ ] Pair the 12/12 fixed-series record with its exact token and dated rate-index values.
+- [ ] Give the Evidence link a dedicated readable frame for scope and methodology.
 
 ## Before export
 
 - [ ] Confirm the cut is exactly 2:20.
-- [ ] Confirm the caveat card is readable and all evidence language is descriptive.
+- [ ] Confirm all ten narration cues and caption boundaries match the canonical 140-second script.
+- [ ] Confirm architecture, installation/CI, fixed-series, token/rate, and provenance frames are readable.
 - [ ] Review at 100% scale for clipped terminal text and contrast.
 - [ ] Include `CAPTIONS.vtt` and verify its timestamps align with narration.

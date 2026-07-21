@@ -18,6 +18,8 @@ Mars Cost Router is a non-executable plugin presentation: a skill, a versioned p
 - The root remains responsible for integration, conflict resolution, and final verification.
 - Native metadata may be inspected when effective settings matter. A requested setting is not proof of an effective setting.
 
+Optional return formats are advisory SKILL guidance, not a runtime schema or enforcement mechanism.
+
 ## Why no hook
 
 Mars Cost Router deliberately has no packaged runtime hook. That keeps the installed surface small and avoids representing an instruction as an enforcement mechanism. There is no executable plugin runtime, project-wide mutable state, receipt store, or telemetry collector.

@@ -58,7 +58,7 @@ class PluginValidationTests(unittest.TestCase):
     def test_public_repository_validates(self) -> None:
         result = validate_repository(ROOT)
         self.assertEqual("mars-cost-router", result["name"])
-        self.assertEqual("0.3.0", result["version"])
+        self.assertEqual("0.3.1", result["version"])
 
     def test_rejects_missing_evidence_asset(self) -> None:
         temporary, root = self.copy_repository()
@@ -109,7 +109,7 @@ class PluginValidationTests(unittest.TestCase):
 
     def test_rejects_version_mismatch(self) -> None:
         self.assert_mutation_rejected(
-            MANIFEST, lambda value: value.__setitem__("version", "0.3.1")
+            MANIFEST, lambda value: value.__setitem__("version", "0.3.2")
         )
 
     def test_rejects_manifest_metadata_mutation(self) -> None:
@@ -128,6 +128,88 @@ class PluginValidationTests(unittest.TestCase):
             POLICY,
             lambda value: value["lanes"]["balanced"].__setitem__("reasoning_effort", "high"),
         )
+
+    def test_rejects_return_schema_policy_key(self) -> None:
+        self.assert_mutation_rejected(
+            POLICY,
+            lambda value: value.__setitem__("return_schema", {"type": "object"}),
+        )
+
+    def test_optional_child_return_contracts_are_complete(self) -> None:
+        skill = (ROOT / SKILL).read_text(encoding="utf-8")
+        normalized_skill = " ".join(skill.split())
+        required = (
+            "## Optional child return contracts",
+            "optional requested formats",
+            "relative/path:line — symbol — short finding",
+            "edit handoff or change summary",
+            "verification actually run and the observed result",
+            "skipped checks",
+            "remaining risks",
+            "critical**, **high**, **medium**, then **low",
+            "No findings",
+            "verification gaps",
+            "## Review and integrate",
+            "Clarity and safety override",
+            "home-directory paths",
+        )
+        for phrase in required:
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, normalized_skill)
+        self.assertLess(
+            skill.index("## Optional child return contracts"),
+            skill.index("## Review and integrate"),
+        )
+
+    def test_rejects_incomplete_optional_return_contract(self) -> None:
+        temporary, root = self.copy_repository()
+        self.addCleanup(temporary.cleanup)
+        path = root / SKILL
+        content = path.read_text(encoding="utf-8")
+        path.write_text(
+            content.replace("verification actually run and the observed result", "verification"),
+            encoding="utf-8",
+        )
+        with self.assertRaises(ValidationError):
+            validate_repository(root)
+
+    def test_rejects_missing_customization_heading_cleanly(self) -> None:
+        temporary, root = self.copy_repository()
+        self.addCleanup(temporary.cleanup)
+        path = root / SKILL
+        content = path.read_text(encoding="utf-8")
+        path.write_text(
+            content.replace("Customize each call as follows:", "Call guidance:"),
+            encoding="utf-8",
+        )
+        with self.assertRaisesRegex(ValidationError, "sections are required"):
+            validate_repository(root)
+
+    def test_rejects_unsupported_output_contract_language(self) -> None:
+        phrases = (
+            "65" + "% output",
+            "65" + "% of the output",
+            "output at " + "65%",
+            "compressed " + "output",
+            "optimized-" + "output",
+            "token-" + "saving output",
+            "guaranteed-" + "output",
+        )
+        for phrase in phrases:
+            with self.subTest(phrase=phrase):
+                temporary, root = self.copy_repository()
+                self.addCleanup(temporary.cleanup)
+                path = root / SKILL
+                content = path.read_text(encoding="utf-8")
+                path.write_text(
+                    content.replace(
+                        "\n## Review and integrate",
+                        f"\n{phrase}\n\n## Review and integrate",
+                    ),
+                    encoding="utf-8",
+                )
+                with self.assertRaises(ValidationError):
+                    validate_repository(root)
 
     def test_rejects_fixed_aggregate_mutation(self) -> None:
         self.assert_mutation_rejected(
@@ -273,9 +355,32 @@ class PluginValidationTests(unittest.TestCase):
             "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
             workflow,
         )
+        self.assertIn(
+            "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+            workflow,
+        )
+        self.assertIn('node-version: "24"', workflow)
+        self.assertIn("run: node video/verify.mjs", workflow)
         self.assertIn("persist-credentials: false", workflow)
         self.assertIn("timeout-minutes: 10", workflow)
         self.assertIn("contents: read", workflow)
+
+    def test_version_surfaces_are_synchronized(self) -> None:
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+        bug_report = (ROOT / ".github/ISSUE_TEMPLATE/bug_report.yml").read_text(
+            encoding="utf-8"
+        )
+        project_story = (ROOT / "PROJECT_STORY.md").read_text(encoding="utf-8")
+        release_url = (
+            "https://github.com/userbox020/mars-cost-router/releases/download/0.3.1/"
+            "mars-cost-router-explainer-0.3.1.mp4"
+        )
+        self.assertIn("![Version 0.3.1]", readme)
+        self.assertIn("## 0.3.1 - 2026-07-21", changelog)
+        self.assertIn("placeholder: 0.3.1", bug_report)
+        self.assertIn(release_url, readme)
+        self.assertIn(release_url, project_story)
 
     def test_rejects_unsupported_headline_claim(self) -> None:
         claims = (

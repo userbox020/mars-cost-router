@@ -20,7 +20,7 @@ if (!browser || (!listedFrames && (!Number.isInteger(start) || !Number.isInteger
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 async function freePort() { const server = createServer(); await new Promise(resolve => server.listen(0, '127.0.0.1', resolve)); const { port } = server.address(); await new Promise(resolve => server.close(resolve)); return port; }
 async function exists(file) { try { await access(file, constants.F_OK); return true; } catch { return false; } }
-const visualInputs = ['index.html', 'app.js', 'styles.css', '../assets/brand/mars-cost-router-hero.svg', '../assets/diagrams/delegation-flow.svg', '../assets/evidence/fixed-v1.2-performance.svg'];
+const visualInputs = ['index.html', 'app.js', 'styles.css', '../assets/brand/mars-cost-router-hero.svg', '../assets/diagrams/delegation-flow.svg', '../assets/evidence/fixed-v1.2-performance.svg', '../assets/evidence/rate-index.svg'];
 async function visualFingerprint() { const hash = createHash('sha256'); for (const input of visualInputs) { const path = resolve(root, input); hash.update(input); hash.update(await readFile(path)); } return hash.digest('hex'); }
 async function ensureFrameCache() {
   const fingerprint = await visualFingerprint(), manifest = resolve(frames, '.mars-frame-cache.json');
@@ -63,7 +63,7 @@ try {
     const output = resolve(frames, `frame${String(frame).padStart(5, '0')}.png`);
     const state = await cdp.send('Runtime.evaluate', { expression: `(() => { const result = window.setFrame(${frame}); const tolerance = 2; const check = id => { const r = document.querySelector(id).getBoundingClientRect(); return { left:r.left, top:r.top, right:r.right, bottom:r.bottom, ok:r.left >= -tolerance && r.top >= -tolerance && r.right <= innerWidth + tolerance && r.bottom <= innerHeight + tolerance }; }; const caption = check('#caption'), scene = check('#scene'); return { frame: result.frame, clock: document.querySelector('#clock').textContent, chapter: document.querySelector('#chapter').textContent, viewport:{width:innerWidth,height:innerHeight}, bounds:{caption,scene,ok:innerWidth === 1920 && innerHeight === 1080 && caption.ok && scene.ok} }; })()`, returnByValue: true });
     const expectedSeconds = Math.floor(frame / 30), expectedClock = `${String(Math.floor(expectedSeconds / 60)).padStart(2, '0')}:${String(expectedSeconds % 60).padStart(2, '0')}`, expectedIndex = Math.min(9, Math.floor((frame / 30) < 12 ? 0 : [12,27,43,58,78,94,110,126,133].filter(boundary => frame / 30 >= boundary).length));
-    const expectedChapter = `${String(expectedIndex + 1).padStart(2, '0')} / ${['POLICY','IDENTITY','LANES','INSTALL','FLOW','PAYLOAD','EVIDENCE','RECORD','CAVEAT','OUTRO'][expectedIndex]}`;
+    const expectedChapter = `${String(expectedIndex + 1).padStart(2, '0')} / ${['POLICY','IDENTITY','LANES','INSTALL','ARCHITECTURE','ROUTE INTENT','EVIDENCE','RECORDED','METHOD','OUTRO'][expectedIndex]}`;
     const rendered = state.result.value;
     if (rendered.frame !== frame || rendered.clock !== expectedClock || rendered.chapter !== expectedChapter || !rendered.bounds?.ok) throw new Error(`Frame ${frame} state/bounds mismatch: got ${JSON.stringify(rendered)}, expected ${expectedClock} / ${expectedChapter} within 1920x1080.`);
     await cdp.send('Runtime.evaluate', { expression: 'new Promise(requestAnimationFrame)', awaitPromise: true });
