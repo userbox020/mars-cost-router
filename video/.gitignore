@@ -1,0 +1,8 @@
+frames/
+out/
+inputs/
+audio-work/
+.cdp-profile/
+sparse-smoke/
+benchmark-gpu/
+benchmark-software/

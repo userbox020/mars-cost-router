@@ -1,0 +1,11 @@
+{
+  "name": "mars-cost-router-video",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Local frame-addressable Mars Cost Router explainer renderer",
+  "scripts": {
+    "verify": "node verify.mjs",
+    "audio": "powershell -ExecutionPolicy Bypass -File .\\audio.ps1",
+    "render": "powershell -ExecutionPolicy Bypass -File .\\render.ps1"
+  }
+}

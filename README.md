@@ -13,6 +13,8 @@ Mars Cost Router is a small local plugin with a three-lane policy for bounded su
 
 Project: [userbox020/mars-cost-router](https://github.com/userbox020/mars-cost-router)
 
+**Build Week judges:** [Read the Project Story and verification path](PROJECT_STORY.md).
+
 ## Quickstart
 
 ```sh
