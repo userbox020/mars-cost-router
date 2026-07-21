@@ -20,7 +20,7 @@
       against the intended public repository after publication.
 - [x] Link an actual hosted video, or ensure the README clearly labels the
       walkthrough as a script or recording plan rather than a hosted video.
-- [ ] Upload and verify a social-preview PNG on the hosted repository.
+- [x] Upload and verify a social-preview PNG on the hosted repository.
 - [x] Record basic project/plugin name-clearance search notes and resolve obvious
       conflicts; do not present this check as legal clearance.
 - [ ] Tag only after the release notes and public documentation are final.
