@@ -7,7 +7,7 @@
 
 > **Unofficial:** Mars Cost Router is not affiliated with or endorsed by OpenAI. “Mars” is this project's brand, not a model.
 
-![Version 0.3.0](https://img.shields.io/badge/version-0.3.0-AD4C32?style=flat-square) ![Tested with Codex CLI 0.144.5](https://img.shields.io/badge/tested-Codex%20CLI%200.144.5-27374D?style=flat-square) ![No runtime hooks](https://img.shields.io/badge/runtime-no%20hooks-536B55?style=flat-square) ![MIT](https://img.shields.io/badge/license-MIT-E3B341?style=flat-square)
+[![Validate](https://github.com/userbox020/mars-cost-router/actions/workflows/validate.yml/badge.svg)](https://github.com/userbox020/mars-cost-router/actions/workflows/validate.yml) ![Version 0.3.0](https://img.shields.io/badge/version-0.3.0-AD4C32?style=flat-square) ![Tested with Codex CLI 0.144.5](https://img.shields.io/badge/tested-Codex%20CLI%200.144.5-27374D?style=flat-square) ![No runtime hooks](https://img.shields.io/badge/runtime-no%20hooks-536B55?style=flat-square) ![MIT](https://img.shields.io/badge/license-MIT-E3B341?style=flat-square)
 
 Mars Cost Router is a small local plugin with a three-lane policy for bounded subagent delegation. It guides the root agent to write explicit child settings. It does not rewrite calls, enforce a route, collect telemetry, or replace root review.
 
