@@ -1,0 +1,33 @@
+{
+  "name": "mars-cost-router",
+  "version": "0.3.0",
+  "description": "Skill-directed explicit settings for bounded Codex subagent delegation.",
+  "author": {
+    "name": "userbox020",
+    "url": "https://github.com/userbox020"
+  },
+  "homepage": "https://github.com/userbox020/mars-cost-router#readme",
+  "repository": "https://github.com/userbox020/mars-cost-router",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "subagents",
+    "routing"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Mars Cost Router",
+    "shortDescription": "Guide bounded delegation with explicit settings",
+    "longDescription": "Independent and unofficial; Mars is the project name, not a model. Adds a delegation skill with explicit economy, balanced, and premium model, effort, and context settings for Codex.",
+    "developerName": "Mars Cost Router contributors",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive"
+    ],
+    "defaultPrompt": [
+      "Use explicit policy lanes for bounded delegation"
+    ],
+    "brandColor": "#C1440E",
+    "websiteURL": "https://github.com/userbox020/mars-cost-router#readme"
+  }
+}

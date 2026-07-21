@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "status": "rate-comparison-only",
+  "effective_date": "2026-07-17",
+  "retrieved_date": "2026-07-18",
+  "rate_plan": "Standard API",
+  "indices": {
+    "gpt-5.6-terra": 50,
+    "gpt-5.6-sol": 100
+  },
+  "official_source_urls": [
+    "https://developers.openai.com/api/docs/pricing",
+    "https://developers.openai.com/api/docs/models/gpt-5.6-sol",
+    "https://developers.openai.com/api/docs/models/gpt-5.6-terra"
+  ],
+  "chatgpt_credits": "excluded",
+  "recheck_requirement": "Recheck the official sources before publication or use.",
+  "caveats": [
+    "The indices compare listed Standard API rates only.",
+    "The comparison is not an invoice, bill prediction, cost calculation, or savings claim."
+  ]
+}

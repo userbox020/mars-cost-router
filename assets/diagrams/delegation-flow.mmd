@@ -1,0 +1,16 @@
+flowchart LR
+  P["Mars policy<br/>three requested lanes"] --> R["Root agent"]
+  R -->|"writes explicit settings"| C1["Bounded child"]
+  R -->|"writes explicit settings"| C2["Bounded child"]
+  C1 --> R
+  C2 --> R
+  R --> V["Root review<br/>and verification"]
+  M["Native metadata<br/>when available"] -. "inspect as evidence" .-> R
+  classDef policy fill:#E8EEE7,stroke:#536B55,color:#17231A
+  classDef root fill:#F7F1E6,stroke:#A66C31,color:#211C17
+  classDef child fill:#EAF0F5,stroke:#496178,color:#17212B
+  classDef evidence fill:#F5E8E2,stroke:#AD4C32,color:#331B15
+  class P policy
+  class R,V root
+  class C1,C2 child
+  class M evidence

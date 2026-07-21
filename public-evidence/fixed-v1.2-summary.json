@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "status": "descriptive-synthetic",
+  "frozen_suite_aggregate_sha256": "96b06474481b7fc4eeec612b4845f4eeb4cb8eed38b7e3fc69dd67c75c1d7bff",
+  "source_series_summary_sha256": "05e010d3805a4b2c16dd4a97cf39342cd1fe091af834c4df67fe110bc76c2361",
+  "provenance": {
+    "frozen_suite_aggregate_sha256": "Binds the frozen suite inputs.",
+    "source_series_summary_sha256": "Identifies the result source summarized by this sanitized file."
+  },
+  "cli_version": "0.144.5",
+  "series": {
+    "pairs": 3,
+    "tasks_per_pair": 4
+  },
+  "treatments": {
+    "selective_terra_sol": {
+      "deterministic_checks": {
+        "passed": 12,
+        "total": 12
+      },
+      "observed_automatic_retries": 0,
+      "observed_reroutes": 0,
+      "tokens": {
+        "child": 356116,
+        "root": 372590,
+        "total": 728706
+      },
+      "median_wall_duration_ms": 45094
+    },
+    "all_sol_high_baseline": {
+      "deterministic_checks": {
+        "passed": 12,
+        "total": 12
+      },
+      "observed_automatic_retries": 0,
+      "observed_reroutes": 0,
+      "tokens": {
+        "child": 356494,
+        "root": 412418,
+        "total": 768912
+      },
+      "median_wall_duration_ms": 53328
+    }
+  },
+  "recorded_deltas_selective_minus_baseline": {
+    "child_tokens": {
+      "absolute": -378,
+      "percent": -0.11
+    },
+    "root_tokens": {
+      "absolute": -39828,
+      "percent": -9.66
+    },
+    "total_tokens": {
+      "absolute": -40206,
+      "percent": -5.23
+    },
+    "median_wall_duration_ms": {
+      "absolute": -8234,
+      "percent": -15.44
+    }
+  },
+  "caveats": [
+    "Three precommitted pairs of four synthetic read-only tasks are summarized descriptively.",
+    "No causal, general-quality, quality-equivalence, or quality-superiority conclusion is supported.",
+    "No cost, billing, ChatGPT-credit, or savings conclusion is supported.",
+    "Token and duration observations are order- and cache-confounded.",
+    "Zero observed retries or reroutes does not prove none occurred or that requested and effective routes matched."
+  ]
+}

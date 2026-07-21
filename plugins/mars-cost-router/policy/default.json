@@ -1,0 +1,33 @@
+{
+  "version": 3,
+  "policy_id": "mars-cost-router-explicit-v3",
+  "effective_date": "2026-07-17",
+  "execution_mode": "model_directed",
+  "lanes": {
+    "economy": {
+      "model": "gpt-5.6-terra",
+      "reasoning_effort": "low",
+      "fork_turns": "none"
+    },
+    "balanced": {
+      "model": "gpt-5.6-terra",
+      "reasoning_effort": "medium",
+      "fork_turns": "none"
+    },
+    "premium": {
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "high",
+      "fork_turns": "none"
+    }
+  },
+  "fallback_order": {
+    "economy": [
+      "balanced",
+      "premium"
+    ],
+    "balanced": [
+      "premium"
+    ],
+    "premium": []
+  }
+}

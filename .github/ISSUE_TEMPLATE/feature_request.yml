@@ -1,0 +1,26 @@
+name: Feature request
+description: Suggest a bounded improvement to the static plugin package.
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What public, non-sensitive problem would this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: Explain how the change preserves an instruction-only plugin with root review.
+    validations:
+      required: true
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: Boundaries
+      options:
+        - label: This request does not depend on hooks, MCP, runtime telemetry, secrets, or private evidence.
+          required: true

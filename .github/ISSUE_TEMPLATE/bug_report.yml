@@ -1,0 +1,36 @@
+name: Bug report
+description: Report a reproducible packaging, policy, or instruction defect.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Do not include credentials, private prompts, or raw session data.
+  - type: input
+    id: version
+    attributes:
+      label: Plugin version
+      placeholder: 0.3.0
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the observed behavior and the expected static policy or instruction behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal reproduction
+      description: Include sanitized steps and validator output.
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I removed secrets, credentials, private prompts, local paths, and raw protocol data.
+          required: true

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Mars Cost Router social card</title>
+  <desc id="desc">Three deliberate routes converge on a verified root. The card identifies Mars Cost Router as an independent, unofficial project and clarifies that Mars is the project name, not a model.</desc>
+  <rect width="1200" height="630" fill="#111A26"/><circle cx="1050" cy="-20" r="350" fill="#AD4C32" opacity=".25"/>
+  <text x="82" y="125" fill="#F7F1E6" font-family="Georgia, serif" font-size="76" font-weight="700">Mars Cost Router</text>
+  <text x="88" y="176" fill="#D5DDE5" font-family="Arial, sans-serif" font-size="28">Independent and unofficial</text>
+  <text x="88" y="215" fill="#D5DDE5" font-family="Arial, sans-serif" font-size="23">Mars is the project name, not a model</text>
+  <path d="M90 415C320 415 360 255 580 325S820 325 980 325" fill="none" stroke="#88A981" stroke-width="13"/><path d="M90 325H980" stroke="#E3B341" stroke-width="13"/><path d="M90 235C320 235 360 395 580 325S820 325 980 325" fill="none" stroke="#D9795B" stroke-width="13"/>
+  <circle cx="1018" cy="325" r="42" fill="#111A26" stroke="#F7F1E6" stroke-width="6"/><path d="M999 325l13 13 26-30" fill="none" stroke="#F7F1E6" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="90" y="550" fill="#F7F1E6" font-family="Arial, sans-serif" font-size="25" letter-spacing="2">ROUTE BY RISK AND EFFORT · VERIFY AT THE ROOT</text>
+</svg>

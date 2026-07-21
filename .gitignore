@@ -1,0 +1,56 @@
+# Secrets, credentials, and local authentication
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+auth.json
+credentials.json
+secrets.json
+.auth/
+auth/
+.secrets/
+secrets/
+*.secret
+.codex/
+
+# Python and tool caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Private evidence, outputs, logs, and protocol captures
+evidence/
+evaluation/
+output/
+outputs/
+logs/
+*.log
+*.jsonl
+*.sse
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+
+# Temporary and generated fixtures
+.tmp/
+tmp/
+temp/
+generated/
+generated-fixtures/
+fixtures/generated/
+*.tmp
+*.temp
+
+# Editor and operating-system files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

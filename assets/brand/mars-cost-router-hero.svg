@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="500" viewBox="0 0 1600 500" role="img" aria-labelledby="title desc">
+  <title id="title">Mars Cost Router</title><desc id="desc">A warm Mars-colored field with three policy paths joining at a verified root.</desc>
+  <rect width="1600" height="500" fill="#111A26"/><circle cx="1320" cy="-20" r="430" fill="#AD4C32" opacity=".22"/><circle cx="155" cy="450" r="310" fill="#E3B341" opacity=".10"/>
+  <g fill="none" stroke-linecap="round"><path d="M130 355 C420 355 440 130 760 250 S1050 250 1270 250" stroke="#88A981" stroke-width="8"/><path d="M130 250 H1270" stroke="#E3B341" stroke-width="8"/><path d="M130 145 C420 145 440 370 760 250 S1050 250 1270 250" stroke="#D9795B" stroke-width="8"/></g>
+  <g fill="#F7F1E6"><text x="130" y="94" font-family="Georgia,serif" font-size="70" font-weight="700">Mars Cost Router</text><text x="134" y="430" font-family="Arial,sans-serif" font-size="26" letter-spacing="2">ROUTE BY RISK AND EFFORT · VERIFY AT THE ROOT</text></g>
+  <g fill="#111A26" stroke="#F7F1E6" stroke-width="5"><circle cx="1300" cy="250" r="38"/></g><path d="M1283 250l12 12 23-27" fill="none" stroke="#F7F1E6" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
