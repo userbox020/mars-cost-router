@@ -35,6 +35,10 @@ EXPECTED_PLUGIN_FILES = {
     Path("policy/default.json"),
     Path("skills/mars-cost-router/SKILL.md"),
 }
+REQUIRED_EVIDENCE_ASSETS = (
+    Path("assets/evidence/fixed-v1.2-performance.svg"),
+    Path("assets/evidence/rate-index.svg"),
+)
 EXPECTED_LANES = {
     "economy": {
         "model": "gpt-5.6-terra",
@@ -161,7 +165,7 @@ def _validate_tree() -> None:
         SKILL_PATH,
         FIXED_SUMMARY_PATH,
         RATE_INDEX_PATH,
-    )
+    ) + tuple(ROOT / relative for relative in REQUIRED_EVIDENCE_ASSETS)
     missing = [str(path.relative_to(ROOT)) for path in required if not path.is_file()]
     if missing:
         raise ValidationError(f"missing required files: {missing}")

@@ -72,9 +72,6 @@ Final video URL pending. The walkthrough uses static policy inspection and sanit
 
 ## Fixed v1.2 descriptive evidence
 
-> [!CAUTION]
-> **Descriptive only — root difference is confounded; 12/12 is not quality equivalence.** This fixed synthetic, read-only series is order- and cache-confounded. It is not causal, general-quality, cost, billing, or savings proof.
-
 ![Fixed v1.2 descriptive comparison: grouped token composition and 12 of 12 checks in each treatment](assets/evidence/fixed-v1.2-performance.svg)
 
 Three precommitted pairs of four synthetic, read-only tasks recorded against Codex CLI 0.144.5:

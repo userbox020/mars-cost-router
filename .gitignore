@@ -26,7 +26,7 @@ __pycache__/
 htmlcov/
 
 # Private evidence, outputs, logs, and protocol captures
-evidence/
+/evidence/
 evaluation/
 output/
 outputs/

@@ -48,6 +48,13 @@ class PluginValidationTests(unittest.TestCase):
         self.assertEqual("mars-cost-router", result["name"])
         self.assertEqual("0.3.0", result["version"])
 
+    def test_rejects_missing_evidence_asset(self) -> None:
+        temporary, root = self.copy_repository()
+        self.addCleanup(temporary.cleanup)
+        (root / "assets/evidence/fixed-v1.2-performance.svg").unlink()
+        with self.assertRaises(ValidationError):
+            validate_repository(root)
+
     def test_public_manifest_and_evidence_identity(self) -> None:
         manifest = json.loads((ROOT / MANIFEST).read_text(encoding="utf-8"))
         self.assertEqual(
