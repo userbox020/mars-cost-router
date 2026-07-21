@@ -14,8 +14,8 @@
 - [x] Verify the local `mars-cost-router-explainer-0.3.1.mp4` media, streams,
       subtitles, duration, and SHA-256
       `78EC16F2CB6E76B0362FB178D867CE59FF780133A9B9D0B62EAFF5D2FBB431B6`.
-- [ ] Confirm hosted CI passes on the pushed `0.3.1` commit.
-- [ ] Confirm a clean remote marketplace refresh/install reports `0.3.1`.
+- [x] Confirm hosted CI passes on the pushed `0.3.1` commit.
+- [x] Confirm a clean remote marketplace refresh/install reports `0.3.1`.
 - [ ] Tag and publish `0.3.1`.
 - [ ] Upload `mars-cost-router-explainer-0.3.1.mp4` to the `0.3.1` release.
 - [ ] Verify the public asset SHA-256 is
