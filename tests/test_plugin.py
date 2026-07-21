@@ -197,6 +197,20 @@ class PluginValidationTests(unittest.TestCase):
         self.assertEqual(before["files"], after["files"])
         self.assertEqual(before, after)
 
+    def test_python_caches_are_excluded_from_scan_and_count(self) -> None:
+        temporary, root = self.copy_repository()
+        self.addCleanup(temporary.cleanup)
+        before = validate_repository(root)
+        cache_path = root / "scripts/__pycache__/validate_plugin.cpython-313.pyc"
+        cache_path.parent.mkdir(parents=True)
+        unix_path = b"/ho" + b"me/runner/private"
+        unsupported_claim = b"without " + b"compromising quality"
+        cache_path.write_bytes(unix_path + b"\n" + unsupported_claim)
+        (root / "generated.pyc").write_bytes(b"sk-" + b"x" * 32)
+        after = validate_repository(root)
+        self.assertEqual(before["files"], after["files"])
+        self.assertEqual(before, after)
+
     def test_ci_actions_are_pinned_and_read_only(self) -> None:
         workflow = (ROOT / ".github/workflows/validate.yml").read_text(encoding="utf-8")
         self.assertIn(

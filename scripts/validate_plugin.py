@@ -133,15 +133,23 @@ def _require_percent(value: Any, label: str) -> float:
 
 
 def _iter_public_tree():
-    """Yield repository entries without traversing or returning Git internals."""
+    """Yield repository entries without generated caches or Git internals."""
 
+    ignored_directories = {
+        ".git",
+        "__pycache__",
+        ".pytest_cache",
+        ".mypy_cache",
+        ".ruff_cache",
+    }
+    ignored_suffixes = {".pyc", ".pyo", ".pyd"}
     for current, directories, files in os.walk(ROOT, followlinks=False):
-        directories[:] = [name for name in directories if name != ".git"]
+        directories[:] = [name for name in directories if name not in ignored_directories]
         current_path = Path(current)
         for name in directories:
             yield current_path / name
         for name in files:
-            if name != ".git":
+            if name != ".git" and Path(name).suffix.casefold() not in ignored_suffixes:
                 yield current_path / name
 
 
