@@ -5,6 +5,7 @@ import { spawn } from 'node:child_process';
 import { mkdir, writeFile, access, readFile, rm } from 'node:fs/promises';
 import { constants } from 'node:fs';
 import { createHash } from 'node:crypto';
+import { tmpdir } from 'node:os';
 import { dirname, resolve } from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 
@@ -38,7 +39,8 @@ class CDP {
 async function websocket(url) { const parsed = new URL(url); const socket = connect({ host: parsed.hostname, port: Number(parsed.port) }); await new Promise((resolve, reject) => { socket.once('error', reject); socket.once('connect', resolve); }); const key = Buffer.from('mars-cost-router-cdp').toString('base64'); socket.write(`GET ${parsed.pathname}${parsed.search} HTTP/1.1\r\nHost: ${parsed.host}\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Key: ${key}\r\nSec-WebSocket-Version: 13\r\n\r\n`); let header = Buffer.alloc(0); await new Promise((resolve, reject) => { const onData = data => { header = Buffer.concat([header, data]); const marker = header.indexOf('\r\n\r\n'); if (marker >= 0) { socket.off('data', onData); if (!header.subarray(0, marker).toString().includes('101')) reject(new Error('CDP WebSocket handshake failed')); else { const rest = header.subarray(marker + 4); if (rest.length) socket.unshift(rest); resolve(); } } }; socket.on('data', onData); socket.once('error', reject); }); return new CDP(socket); }
 
 const port = await freePort();
-const profile = resolve(root, '.cdp-profile');
+const profile = resolve(tmpdir(), `mars-cost-router-cdp-${process.pid}-${port}`);
+await rm(profile, { recursive: true, force: true });
 const software = hasFlag('--software');
 const gpuFlags = software ? ['--disable-gpu'] : ['--enable-gpu-rasterization', '--enable-oop-rasterization', '--use-angle=d3d11'];
 const processHandle = spawn(browser, [`--headless=new`, `--remote-debugging-port=${port}`, `--user-data-dir=${profile}`, '--no-first-run', '--no-default-browser-check', ...gpuFlags, '--hide-scrollbars', '--force-device-scale-factor=1', '--window-size=1920,1080', 'about:blank'], { stdio: 'ignore', windowsHide: true });
@@ -74,4 +76,6 @@ try {
 } finally {
   try { if (cdp) { await cdp.send('Browser.close'); cdp.socket.end(); } } catch {}
   if (!processHandle.killed) processHandle.kill();
+  await delay(100);
+  await rm(profile, { recursive: true, force: true }).catch(() => {});
 }

@@ -68,9 +68,9 @@ The skill and versioned policy inform the root. The root writes the child reques
 
 ## Watch the 2:20 walkthrough
 
-[2:20 walkthrough script](demo/VIDEO_SCRIPT.md) · [Captions](demo/CAPTIONS.vtt) · [Recording checklist](demo/RECORDING_CHECKLIST.md) · [Terminal commands](demo/TERMINAL_COMMANDS.md)
+[Watch the 2:20 walkthrough](https://github.com/userbox020/mars-cost-router/releases/download/0.3.0/mars-cost-router-explainer.mp4) · [Script](demo/VIDEO_SCRIPT.md) · [Captions](demo/CAPTIONS.vtt) · [Recording checklist](demo/RECORDING_CHECKLIST.md) · [Terminal commands](demo/TERMINAL_COMMANDS.md)
 
-Final video URL pending. The walkthrough uses static policy inspection and sanitized examples. It does not expose private prompts, thread IDs, or unredacted evidence.
+The walkthrough uses static policy inspection and sanitized examples. It does not expose private prompts, thread IDs, or unredacted evidence.
 
 ## Fixed v1.2 descriptive evidence
 

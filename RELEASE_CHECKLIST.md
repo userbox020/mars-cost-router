@@ -23,4 +23,4 @@
 - [x] Upload and verify a social-preview PNG on the hosted repository.
 - [x] Record basic project/plugin name-clearance search notes and resolve obvious
       conflicts; do not present this check as legal clearance.
-- [ ] Tag only after the release notes and public documentation are final.
+- [x] Finalize release notes and public documentation before tagging.

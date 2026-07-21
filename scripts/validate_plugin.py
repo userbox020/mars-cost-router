@@ -147,9 +147,22 @@ def _iter_public_tree():
         ".ruff_cache",
     }
     ignored_suffixes = {".pyc", ".pyo", ".pyd"}
+    video_generated_directories = {
+        ".cdp-profile",
+        "audio-work",
+        "benchmark-gpu",
+        "benchmark-software",
+        "frames",
+        "inputs",
+        "out",
+        "sparse-smoke",
+    }
     for current, directories, files in os.walk(ROOT, followlinks=False):
-        directories[:] = [name for name in directories if name not in ignored_directories]
         current_path = Path(current)
+        excluded = ignored_directories
+        if current_path == ROOT / "video":
+            excluded = excluded | video_generated_directories
+        directories[:] = [name for name in directories if name not in excluded]
         for name in directories:
             yield current_path / name
         for name in files:

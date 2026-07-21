@@ -92,7 +92,8 @@ I also built the deterministic source project for a 2:20 explainer under
 `video/`. It renders 4,200 frame-addressed 1080p frames over 140 seconds. It
 generates local narration and an original procedural audio bed, verifies caption
 and scene bounds, and uses GPU-assisted capture and encoding when available. No
-account screen, private prompt, or downloaded media is required.
+account screen, private prompt, or downloaded media is required. [Watch the
+finished 2:20 walkthrough](https://github.com/userbox020/mars-cost-router/releases/download/0.3.0/mars-cost-router-explainer.mp4).
 
 ## Judge installation and testing path
 

@@ -6,6 +6,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)));
 const read = path => readFileSync(resolve(root, path), 'utf8');
 const app = read('app.js');
 const capture = read('capture.mjs');
+const render = read('render.ps1');
 const captions = read('../demo/CAPTIONS.vtt');
 const script = read('../demo/VIDEO_SCRIPT.md');
 const shotList = read('../demo/SHOT_LIST.md');
@@ -43,13 +44,16 @@ for (const phrase of ['window.setFrame', 'applyMotion', 'Page.captureScreenshot'
 for (const phrase of ['currentFrame=requestedFrame', 'String(currentFrame).padStart(4', 't=currentFrame/fps']) if (!app.replaceAll(' ', '').includes(phrase)) throw new Error(`Exact frame-identity contract missing: ${phrase}`);
 if (app.includes('return {frame:Math.floor(t*fps)')) throw new Error('setFrame must not recompute integer identity from floating-point time.');
 for (const phrase of ['captionMotion', 'translate(-50%,${y.toFixed(2)}px)', 'captionMotion(presence']) if (!app.includes(phrase)) throw new Error(`Centered caption-motion contract missing: ${phrase}`);
+if (!app.includes('exit=c[1]===duration?1')) throw new Error('The final outro must remain visible through frame 4199.');
 if (!capture.includes("'?frame=0&clean=1'")) throw new Error('Capture navigation must include frame=0 to disable wall-clock playback.');
 if (capture.includes("href + '?clean=1'")) throw new Error('Capture navigation can re-enable wall-clock playback.');
 for (const phrase of ['--frame-list', 'verify-distinct', 'state/bounds mismatch', 'all PNG hashes are equal']) if (!capture.includes(phrase)) throw new Error(`Sparse capture regression contract missing: ${phrase}`);
 for (const phrase of ['getBoundingClientRect()', 'bounds:{caption,scene', 'visualFingerprint', 'Cleared stale frame cache']) if (!capture.includes(phrase)) throw new Error(`Viewport/cache safety contract missing: ${phrase}`);
 if (!read('smoke.ps1').includes("'123,127,300,1350,3150,3540,3840,4050,4199'")) throw new Error('Sparse smoke must cover the recalculated long-caption and final-frame review points.');
 for (const phrase of ['--enable-gpu-rasterization', '--use-angle=d3d11', 'optimizeForSpeed: true', '--software']) if (!capture.includes(phrase)) throw new Error(`GPU/software capture contract missing: ${phrase}`);
-if (!read('render.ps1').includes('Test-Nvenc') || !read('render.ps1').includes('h264_nvenc')) throw new Error('Conditional NVENC probe contract missing.');
+for (const phrase of ['tmpdir()', 'mars-cost-router-cdp-']) if (!capture.includes(phrase)) throw new Error(`Temporary browser-profile contract missing: ${phrase}`);
+if (capture.includes("resolve(root, '.cdp-profile')")) throw new Error('Browser profiles must not be generated inside the public repository.');
+for (const phrase of ['Test-Nvenc', 'h264_nvenc', 'Resolve-MediaInput', 'Join-Path $root $Path']) if (!render.includes(phrase)) throw new Error(`Render portability/encoding contract missing: ${phrase}`);
 if (read('styles.css').includes('@keyframes') || read('styles.css').includes('animation:')) throw new Error('Wall-clock CSS animation is not allowed in frame-addressed rendering.');
 const banned = /synthetic[ ,\-]+read(?:-| )only (?:tasks|series|workspace)/i;
 for (const directory of [root, resolve(root, '../demo')]) {

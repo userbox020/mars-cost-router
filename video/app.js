@@ -41,7 +41,7 @@
   const style=(selector,opacity,y=0,x=0,scale=1)=>{const el=document.querySelector(selector);if(el){el.style.opacity=opacity.toFixed(3);el.style.transform=`translate(${x.toFixed(2)}px,${y.toFixed(2)}px) scale(${scale.toFixed(4)})`}};
   const captionMotion=(opacity,y=0)=>{const el=$('#caption');if(el){el.style.opacity=opacity.toFixed(3);el.style.transform=`translate(-50%,${y.toFixed(2)}px)`}};
   function applyMotion(c){
-    const local=t-c[0], span=c[1]-c[0], enter=ease(local/.72), exit=ease((span-local)/.72), presence=Math.min(enter,exit);
+    const local=t-c[0], span=c[1]-c[0], enter=ease(local/.5), exit=c[1]===duration?1:ease((span-local)/.28), presence=Math.min(enter,exit);
     const drift=Math.sin(t*.42), slow=Math.sin(t*.17);
     $('#scene').style.opacity=presence.toFixed(3); $('#scene').style.transform=`translateY(${((1-enter)*18-(1-exit)*8).toFixed(2)}px)`;
     $('#planet').style.transform=`translate(${(slow*22+t*.32).toFixed(2)}px,${(drift*12-t*.12).toFixed(2)}px) scale(${(1.0+Math.sin(t*.11)*.012).toFixed(4)})`;

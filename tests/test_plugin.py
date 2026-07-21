@@ -25,7 +25,19 @@ class PluginValidationTests(unittest.TestCase):
         shutil.copytree(
             ROOT,
             destination,
-            ignore=shutil.ignore_patterns(".git", "__pycache__", "*.pyc"),
+            ignore=shutil.ignore_patterns(
+                ".git",
+                "__pycache__",
+                "*.pyc",
+                ".cdp-profile",
+                "audio-work",
+                "benchmark-gpu",
+                "benchmark-software",
+                "frames",
+                "inputs",
+                "out",
+                "sparse-smoke",
+            ),
         )
         return temporary, destination
 
@@ -230,6 +242,23 @@ class PluginValidationTests(unittest.TestCase):
         unsupported_claim = b"without " + b"compromising quality"
         cache_path.write_bytes(unix_path + b"\n" + unsupported_claim)
         (root / "generated.pyc").write_bytes(b"sk-" + b"x" * 32)
+        after = validate_repository(root)
+        self.assertEqual(before["files"], after["files"])
+        self.assertEqual(before, after)
+
+    def test_video_artifacts_are_excluded_from_scan_and_count(self) -> None:
+        temporary, root = self.copy_repository()
+        self.addCleanup(temporary.cleanup)
+        before = validate_repository(root)
+        for relative in (
+            "video/.cdp-profile/manifest.json",
+            "video/inputs/narration.wav",
+            "video/out/explainer.mp4",
+            "video/sparse-smoke/frame00000.png",
+        ):
+            path = root / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(b"C:" + b"/Us" + b"ers/example/private\nsk-" + b"x" * 32)
         after = validate_repository(root)
         self.assertEqual(before["files"], after["files"])
         self.assertEqual(before, after)

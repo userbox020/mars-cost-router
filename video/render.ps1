@@ -46,13 +46,16 @@ $seconds = $frameCount / $fps
 $imagePattern = Join-Path $frames 'frame%05d.png'
 $ff = @('-y','-framerate',$fps,'-start_number',$StartFrame,'-i',$imagePattern)
 $audioInputs = @()
+function Resolve-MediaInput([string]$Path, [string]$Label) {
+  $candidate = if ([IO.Path]::IsPathRooted($Path) -or (Test-Path -LiteralPath $Path)) { $Path } else { Join-Path $root $Path }
+  if (!(Test-Path -LiteralPath $candidate)) { throw "$Label file was not found: $Path" }
+  return (Resolve-Path -LiteralPath $candidate).Path
+}
 if ($Narration) {
-  if (!(Test-Path -LiteralPath $Narration)) { throw "Narration file was not found: $Narration" }
-  $ff += @('-i',(Resolve-Path -LiteralPath $Narration)); $audioInputs += 'narration'
+  $ff += @('-i',(Resolve-MediaInput $Narration 'Narration')); $audioInputs += 'narration'
 }
 if ($BackgroundAudio) {
-  if (!(Test-Path -LiteralPath $BackgroundAudio)) { throw "Background audio file was not found: $BackgroundAudio" }
-  $ff += @('-stream_loop','-1','-i',(Resolve-Path -LiteralPath $BackgroundAudio)); $audioInputs += 'background'
+  $ff += @('-stream_loop','-1','-i',(Resolve-MediaInput $BackgroundAudio 'Background audio')); $audioInputs += 'background'
 }
 if ($Subtitles) { $ff += @('-i',(Join-Path $root '..\demo\CAPTIONS.vtt')) }
 function Test-Nvenc([string]$Pattern, [int]$ProbeStart) {
