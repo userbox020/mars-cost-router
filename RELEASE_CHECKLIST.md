@@ -21,8 +21,8 @@ The published 0.3.1 walkthrough remains the intentional current overview. No
 
 - [x] Confirm hosted CI passes on the pushed `0.3.2` commit.
 - [x] Confirm a clean remote marketplace refresh/install reports `0.3.2`.
-- [ ] Tag and publish `0.3.2`.
-- [ ] Verify public package, documentation, and retained 0.3.1 walkthrough links
+- [x] Tag and publish `0.3.2`.
+- [x] Verify public package, documentation, and retained 0.3.1 walkthrough links
       after publication.
 
 ## 0.3.1 release gates
