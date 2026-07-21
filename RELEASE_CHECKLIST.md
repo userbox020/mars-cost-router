@@ -16,12 +16,12 @@
       `78EC16F2CB6E76B0362FB178D867CE59FF780133A9B9D0B62EAFF5D2FBB431B6`.
 - [x] Confirm hosted CI passes on the pushed `0.3.1` commit.
 - [x] Confirm a clean remote marketplace refresh/install reports `0.3.1`.
-- [ ] Tag and publish `0.3.1`.
-- [ ] Upload `mars-cost-router-explainer-0.3.1.mp4` to the `0.3.1` release.
-- [ ] Verify the public asset SHA-256 is
+- [x] Tag and publish `0.3.1`.
+- [x] Upload `mars-cost-router-explainer-0.3.1.mp4` to the `0.3.1` release.
+- [x] Verify the public asset SHA-256 is
       `78EC16F2CB6E76B0362FB178D867CE59FF780133A9B9D0B62EAFF5D2FBB431B6`
       and verify its duration, streams, and subtitles after download.
-- [ ] Confirm the README and Project Story release-asset links return HTTP 200.
+- [x] Confirm the README and Project Story release-asset links return HTTP 200.
 
 ## 0.3.0 completed release checklist
 
