@@ -2,6 +2,22 @@
 
 All notable changes to this project are documented here.
 
+## 0.3.2 - 2026-07-21
+
+- Add a root-first decision ladder with Premium risk precedence, Economy only
+  when every low-risk condition holds, and Balanced as the delegated default.
+- Separate cause-specific reviewed escalation from malformed-call correction,
+  missing authority, model unavailability, and newly increased risk; prohibit
+  silent model substitution.
+- Add non-overlapping writer ownership, dependency ordering, child completion
+  status, and root acceptance guidance.
+- Add adaptable delegation playbooks, installation troubleshooting, and
+  minimum-necessary-context privacy and provider-boundary guidance.
+- Replace duplicated prose checks with versioned fixture-driven conformance and
+  policy-derived structural validation.
+- No policy lane values, runtime, telemetry, or published evidence claims
+  changed.
+
 ## 0.3.1 - 2026-07-21
 
 - Add optional requested return shapes for read-only locators, focused edit

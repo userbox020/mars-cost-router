@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "files": {
+    "plugins/mars-cost-router/skills/mars-cost-router/SKILL.md": {
+      "ordered_sections": [
+        "## Decide whether and how to delegate",
+        "## Choose one lane",
+        "## Handle failure and escalation by cause",
+        "## Decompose and assign ownership",
+        "## Build the native V2 call",
+        "## Optional child return contracts",
+        "## Review and integrate"
+      ],
+      "required_anchors": [
+        "Instruction-driven and evidence-limited",
+        "does not enforce or independently verify",
+        "requested lane is not evidence",
+        "Root / no delegation first",
+        "Premium if any trigger is present",
+        "Economy only when all conditions hold",
+        "Balanced is the delegated default",
+        "Do not select a lane from the task noun alone",
+        "fallback_order` is advisory, reviewed escalation",
+        "never means automatic fallback, retry, or model substitution",
+        "new self-contained next-lane request",
+        "retry in the same appropriate lane after correction",
+        "Never silently substitute another model",
+        "there is no lane above Premium",
+        "Within a parallel batch, assign at most one child writer to each file or area",
+        "Re-scope overlapping work or serialize it under root review",
+        "Parallelize only independent tasks",
+        "do not start a dependent child before prerequisite evidence is reviewed",
+        "Keep cross-cutting integration, conflict resolution, final architectural or product decisions, and final claims at the root",
+        "Delegate commits, publication, deployment, credential access, or destructive actions only when the user explicitly authorizes that exact bounded action",
+        "Children never delegate or spawn another agent",
+        "REQUIRED — NEVER INHERIT",
+        "Do not set `agent_type` or `service_tier`",
+        "Do not ask a child to maintain project-wide state, commit, publish, deploy, access credentials, or perform production/destructive work unless the user has explicitly authorized that exact action",
+        "State whether the task is complete. If partial or blocked, identify remaining work, verification gaps, and any root decision needed",
+        "Child status remains unverified until the root checks the work",
+        "Root acceptance checklist",
+        "describe only evidence actually observed"
+      ]
+    },
+    "docs/PLAYBOOKS.md": {
+      "ordered_sections": [
+        "## 1. Bounded read-only locator — Economy",
+        "## 2. Focused implementation with tests — Balanced",
+        "## 3. Authentication/security review — Premium",
+        "## 4. Mixed/dependent task — root decomposition"
+      ],
+      "required_anchors": [
+        "request template, not a ready-to-run call",
+        "Replace every `<PLACEHOLDER>` value",
+        "Root/no-delegation decision",
+        "Why this lane fits",
+        "Request template",
+        "Optional return format",
+        "Root verification and acceptance"
+      ]
+    },
+    "docs/INSTALL.md": {
+      "ordered_sections": [],
+      "required_anchors": [
+        "codex plugin list",
+        "Start a new Codex session",
+        "Do not silently substitute another model",
+        "Return to root or user clarification",
+        "Use the installed `mars-cost-router` skill",
+        "[Playbooks](PLAYBOOKS.md)"
+      ]
+    },
+    "docs/PRIVACY.md": {
+      "ordered_sections": [],
+      "required_anchors": [
+        "self-contained child message does not mean copying the root transcript",
+        "Keep a sensitive task at the root",
+        "Reference sensitive material rather than reproducing it",
+        "Mars Cost Router collects no telemetry",
+        "their own terms, settings, and policies"
+      ]
+    },
+    "docs/ARCHITECTURE.md": {
+      "ordered_sections": [],
+      "required_anchors": [
+        "The root unconditionally retains cross-cutting integration, conflict resolution, final architectural or product decisions, final verification, and final claims",
+        "Commits, publication, deployment, credential access, and destructive actions may be delegated only when the user explicitly authorizes that exact bounded action"
+      ]
+    },
+    "docs/EVIDENCE.md": {
+      "ordered_sections": [],
+      "required_anchors": [
+        "Fixed-v1.2 also predates and does not evaluate any 0.3.2 root-first decision ladder",
+        "cause-specific escalation",
+        "ownership or dependency rules",
+        "root acceptance guidance",
+        "minimum-context privacy guidance",
+        "delegation playbooks"
+      ]
+    },
+    "README.md": {
+      "ordered_sections": [],
+      "required_anchors": [
+        "[Playbooks](docs/PLAYBOOKS.md)",
+        "[Install and troubleshooting](docs/INSTALL.md)",
+        "Watch the 0.3.1 walkthrough"
+      ]
+    }
+  }
+}

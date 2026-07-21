@@ -27,6 +27,10 @@ The [sanitized fixed-v1.2 machine-readable summary](../public-evidence/fixed-v1.
 Fixed-v1.2 predates the optional child return contracts in 0.3.1 and does not
 evaluate those requested formats.
 
+Fixed-v1.2 also predates and does not evaluate any 0.3.2 root-first decision
+ladder, cause-specific escalation, ownership or dependency rules, root
+acceptance guidance, minimum-context privacy guidance, or delegation playbooks.
+
 ## Dated rate comparison
 
 As of **2026-07-17**, the recorded Standard API rate source lists Terra at a 50 index versus Sol at a 100 index across the recorded categories.

@@ -19,9 +19,14 @@ MARKETPLACE_PATH = ROOT / ".agents/plugins/marketplace.json"
 MANIFEST_PATH = PLUGIN_ROOT / ".codex-plugin/plugin.json"
 POLICY_PATH = PLUGIN_ROOT / "policy/default.json"
 SKILL_PATH = PLUGIN_ROOT / "skills/mars-cost-router/SKILL.md"
+CONTRACT_FIXTURE_PATH = ROOT / "tests/fixtures/skill-contract-v1.json"
 FIXED_SUMMARY_PATH = ROOT / "public-evidence/fixed-v1.2-summary.json"
 RATE_INDEX_PATH = ROOT / "public-evidence/rate-index-2026-07-17.json"
-VERSION = "0.3.1"
+PLAYBOOKS_PATH = ROOT / "docs/PLAYBOOKS.md"
+INSTALL_PATH = ROOT / "docs/INSTALL.md"
+PRIVACY_PATH = ROOT / "docs/PRIVACY.md"
+README_PATH = ROOT / "README.md"
+VERSION = "0.3.2"
 REPOSITORY_URL = "https://github.com/userbox020/mars-cost-router"
 HOMEPAGE_URL = f"{REPOSITORY_URL}#readme"
 LONG_DESCRIPTION = (
@@ -176,8 +181,13 @@ def _validate_tree() -> None:
         MANIFEST_PATH,
         POLICY_PATH,
         SKILL_PATH,
+        CONTRACT_FIXTURE_PATH,
         FIXED_SUMMARY_PATH,
         RATE_INDEX_PATH,
+        PLAYBOOKS_PATH,
+        INSTALL_PATH,
+        PRIVACY_PATH,
+        README_PATH,
     ) + tuple(ROOT / relative for relative in REQUIRED_EVIDENCE_ASSETS)
     missing = [str(path.relative_to(ROOT)) for path in required if not path.is_file()]
     if missing:
@@ -317,7 +327,7 @@ def _validate_manifest(manifest: Any) -> dict[str, Any]:
     return manifest
 
 
-def _validate_policy(policy: Any) -> None:
+def _validate_policy(policy: Any) -> dict[str, Any]:
     policy = _require_keys(
         policy,
         {"version", "policy_id", "effective_date", "execution_mode", "lanes", "fallback_order"},
@@ -343,6 +353,38 @@ def _validate_policy(policy: Any) -> None:
     )
     if fallback != EXPECTED_FALLBACKS:
         raise ValidationError("fallback order differs from the public policy")
+    return lanes
+
+
+def _validate_contract_fixture(fixture: Any, sources: dict[str, str]) -> None:
+    fixture = _require_keys(fixture, {"schema_version", "files"}, "skill contract fixture")
+    if fixture["schema_version"] != 1 or type(fixture["schema_version"]) is not int:
+        raise ValidationError("skill contract fixture schema_version must be integer 1")
+    files = _require_keys(fixture["files"], set(sources), "skill contract files")
+    for relative, source in sources.items():
+        contract = _require_keys(
+            files[relative], {"ordered_sections", "required_anchors"}, f"contract {relative}"
+        )
+        ordered = contract["ordered_sections"]
+        anchors = contract["required_anchors"]
+        for values, label, allow_empty in (
+            (ordered, "ordered_sections", True),
+            (anchors, "required_anchors", False),
+        ):
+            if (
+                not isinstance(values, list)
+                or (not allow_empty and not values)
+                or not all(isinstance(value, str) and value for value in values)
+                or len(values) != len(set(values))
+            ):
+                raise ValidationError(f"contract {relative} has invalid {label}")
+        indexes = [source.find(section) for section in ordered]
+        if indexes and (min(indexes) < 0 or indexes != sorted(indexes)):
+            raise ValidationError(f"contract sections are missing or out of order: {relative}")
+        normalized_source = re.sub(r"\s+", " ", source)
+        for anchor in anchors:
+            if re.sub(r"\s+", " ", anchor) not in normalized_source:
+                raise ValidationError(f"contract anchor is missing from {relative}: {anchor}")
 
 
 def _parse_frontmatter(skill: str) -> dict[str, str]:
@@ -369,9 +411,10 @@ def _parse_frontmatter(skill: str) -> dict[str, str]:
     return frontmatter
 
 
-def _validate_skill(skill: str) -> None:
+def _validate_skill(skill: str, policy_lanes: dict[str, Any]) -> None:
     frontmatter = _parse_frontmatter(skill)
     _require_string(frontmatter["description"], "skill frontmatter description")
+
     row_pattern = re.compile(
         r"^\| (economy|balanced|premium) \| `([^`]+)` \| `([^`]+)` \| `([^`]+)` \|$",
         re.MULTILINE,
@@ -380,7 +423,7 @@ def _validate_skill(skill: str) -> None:
         lane: {"model": model, "reasoning_effort": effort, "fork_turns": fork_turns}
         for lane, model, effort, fork_turns in row_pattern.findall(skill)
     }
-    if rows != EXPECTED_LANES:
+    if rows != policy_lanes:
         raise ValidationError("skill lane table differs from the routing policy")
 
     template_pattern = re.compile(
@@ -395,96 +438,79 @@ def _validate_skill(skill: str) -> None:
             )
         except json.JSONDecodeError as exc:
             raise ValidationError(f"invalid {lane} spawn template JSON: {exc}") from exc
-    if set(templates) != set(EXPECTED_LANES):
-        raise ValidationError("skill must contain exactly one spawn template per lane")
+    if set(templates) != set(policy_lanes):
+        raise ValidationError("skill must contain exactly one spawn template per policy lane")
     template_keys = {"task_name", "message", "model", "reasoning_effort", "fork_turns"}
-    for lane, expected in EXPECTED_LANES.items():
+    for lane, expected in policy_lanes.items():
         template = _require_keys(templates[lane], template_keys, f"{lane} spawn template")
-        if any(template[key] != value for key, value in expected.items()):
+        if any(template[field] != value for field, value in expected.items()):
             raise ValidationError(f"{lane} spawn template differs from the routing policy")
+        if not isinstance(template["task_name"], str) or not template["task_name"]:
+            raise ValidationError(f"{lane} spawn template needs a task_name")
         if "Do not delegate or spawn another agent." not in str(template["message"]):
             raise ValidationError(f"{lane} spawn template must prohibit nested delegation")
 
-    required_claim_boundaries = (
-        "Instruction-driven and evidence-limited",
-        "does not enforce or independently verify",
-        "requested lane is not evidence",
-        "REQUIRED — NEVER INHERIT",
-        "Inheritance or omission of any of these three fields is invalid.",
-        "Do not set `agent_type` or `service_tier`.",
-        "The root owns scope, integration, conflict resolution, final verification",
-        "describe only evidence actually observed",
-    )
-    normalized = re.sub(r"\s+", " ", skill)
-    for statement in required_claim_boundaries:
-        if statement not in normalized:
-            raise ValidationError(f"skill is missing required boundary: {statement}")
-
-    customization_index = skill.find("Customize each call as follows:")
-    return_contract_index = skill.find("## Optional child return contracts")
-    review_index = skill.find("## Review and integrate")
-    if min(customization_index, return_contract_index, review_index) < 0:
-        raise ValidationError(
-            "customization, optional child return contracts, and root review sections are required"
-        )
-    if not customization_index < return_contract_index < review_index:
-        raise ValidationError(
-            "optional child return contracts must follow customization and precede root review"
-        )
-    return_contract = skill[return_contract_index:review_index]
-    required_return_contracts = (
-        "These are optional requested formats.",
-        "does not validate or enforce a child response shape",
-        "### Read-only locator",
-        "`relative/path:line — symbol — short finding`",
-        "repository-relative locations",
-        "### Focused edit handoff",
-        "edit handoff or change summary",
-        "changed repository-relative paths",
-        "verification actually run and the observed result",
-        "skipped checks",
-        "remaining risks",
-        "### Review",
-        "findings first",
-        "**critical**, **high**, **medium**, then **low**",
-        "repository-relative location",
-        "concrete impact",
-        "or action",
-        "`No findings`",
-        "verification gaps",
-        "### Clarity and safety override",
-        "Do not force brevity or omit material context",
-        "security",
-        "destructive or production actions",
-        "ambiguity",
-        "conflicting evidence",
-        "missing verification",
-        "required user authorization",
-        "Never include credentials, private prompts",
-        "home-directory paths",
-        "unrelated local details",
-    )
-    normalized_return_contract = re.sub(r"\s+", " ", return_contract)
-    for statement in required_return_contracts:
-        if statement not in normalized_return_contract:
-            raise ValidationError(
-                f"optional child return contracts are missing required guidance: {statement}"
-            )
-    forbidden_return_language = (
-        re.compile(
-            r"(?:\b65\s*%\s*(?:of\s+)?(?:the\s+)?output\b|\boutput\s+(?:at|to)\s+65\s*%)",
-            re.IGNORECASE,
-        ),
+    forbidden_output_language = (
+        re.compile(r"(?:\b65\s*%\s*(?:of\s+)?(?:the\s+)?output\b|\boutput\s+(?:at|to)\s+65\s*%)", re.IGNORECASE),
         re.compile(r"\b(?:compressed|optimized)[ -]?output\b", re.IGNORECASE),
         re.compile(r"\btoken[ -]?saving\b", re.IGNORECASE),
         re.compile(r"\bsav(?:e|es|ing)\s+tokens?\b", re.IGNORECASE),
         re.compile(r"\bguaranteed[ -]?output\b", re.IGNORECASE),
     )
-    for pattern in forbidden_return_language:
-        if pattern.search(return_contract):
-            raise ValidationError(
-                "optional child return contracts contain unsupported output language"
-            )
+    if any(pattern.search(skill) for pattern in forbidden_output_language):
+        raise ValidationError("skill contains unsupported output language")
+
+
+def _validate_public_guides(playbooks: str, policy_lanes: dict[str, Any]) -> None:
+    workflows = list(re.finditer(r"^## (\d+)\. .+$", playbooks, re.MULTILINE))
+    if [match.group(1) for match in workflows] != ["1", "2", "3", "4"]:
+        raise ValidationError("playbooks must contain exactly four numbered workflows")
+    lanes = ("economy", "balanced", "premium", "balanced")
+
+    for index, (workflow, lane) in enumerate(zip(workflows, lanes)):
+        heading = workflow.group(0)
+        start = workflow.start()
+        finish = workflows[index + 1].start() if index + 1 < len(workflows) else len(playbooks)
+        section = playbooks[start:finish]
+        for marker in (
+            "**Root/no-delegation decision:**",
+            "**Why this lane fits:**",
+            "**Request template:**",
+            "**Optional return format",
+            "**Root verification and acceptance:**",
+        ):
+            if marker not in section:
+                raise ValidationError(f"playbook workflow is missing {marker}: {heading}")
+        blocks = re.findall(r"```json\n(\{.*?\})\n```", section, re.DOTALL)
+        if len(blocks) != 1:
+            raise ValidationError(f"playbook must contain one JSON request template: {heading}")
+        try:
+            request = json.loads(blocks[0], object_pairs_hook=_object_without_duplicates)
+        except json.JSONDecodeError as exc:
+            raise ValidationError(f"playbook request template is invalid JSON: {heading}") from exc
+        request = _require_keys(
+            request,
+            {"task_name", "message", "model", "reasoning_effort", "fork_turns"},
+            f"playbook request {heading}",
+        )
+        if not isinstance(request["task_name"], str) or not re.fullmatch(
+            r"[a-z][a-z0-9_]{2,40}", request["task_name"]
+        ):
+            raise ValidationError(f"playbook task_name is not generic: {heading}")
+        message = request["message"]
+        if not isinstance(message, str) or "bounded" not in message.casefold():
+            raise ValidationError(f"playbook message must be bounded: {heading}")
+        if "Do not delegate or spawn another agent." not in message:
+            raise ValidationError(f"playbook message permits nested delegation: {heading}")
+        placeholders = re.findall(r"<[A-Z][A-Z0-9_]*>", message)
+        if not placeholders:
+            raise ValidationError(f"playbook template needs replacement placeholders: {heading}")
+        remainder = re.sub(r"<[A-Z][A-Z0-9_]*>", "", message)
+        if "<" in remainder or ">" in remainder:
+            raise ValidationError(f"playbook template has a malformed placeholder: {heading}")
+        expected_lane = policy_lanes[lane]
+        if any(request[field] != value for field, value in expected_lane.items()):
+            raise ValidationError(f"playbook request lane mismatch: {heading}")
 
 
 def _validate_fixed_summary(summary: Any) -> None:
@@ -727,7 +753,8 @@ def validate_repository(root: Path | None = None) -> dict[str, int | str]:
     """Validate a repository tree and return a compact success summary."""
 
     global ROOT, PLUGIN_ROOT, MARKETPLACE_PATH, MANIFEST_PATH, POLICY_PATH, SKILL_PATH
-    global FIXED_SUMMARY_PATH, RATE_INDEX_PATH
+    global FIXED_SUMMARY_PATH, RATE_INDEX_PATH, PLAYBOOKS_PATH, INSTALL_PATH
+    global PRIVACY_PATH, README_PATH, CONTRACT_FIXTURE_PATH
     if root is not None:
         ROOT = Path(root).resolve()
         PLUGIN_ROOT = ROOT / PLUGIN_REL
@@ -735,8 +762,13 @@ def validate_repository(root: Path | None = None) -> dict[str, int | str]:
         MANIFEST_PATH = PLUGIN_ROOT / ".codex-plugin/plugin.json"
         POLICY_PATH = PLUGIN_ROOT / "policy/default.json"
         SKILL_PATH = PLUGIN_ROOT / "skills/mars-cost-router/SKILL.md"
+        CONTRACT_FIXTURE_PATH = ROOT / "tests/fixtures/skill-contract-v1.json"
         FIXED_SUMMARY_PATH = ROOT / "public-evidence/fixed-v1.2-summary.json"
         RATE_INDEX_PATH = ROOT / "public-evidence/rate-index-2026-07-17.json"
+        PLAYBOOKS_PATH = ROOT / "docs/PLAYBOOKS.md"
+        INSTALL_PATH = ROOT / "docs/INSTALL.md"
+        PRIVACY_PATH = ROOT / "docs/PRIVACY.md"
+        README_PATH = ROOT / "README.md"
 
     _validate_tree()
     marketplace = _load_json(MARKETPLACE_PATH)
@@ -744,10 +776,26 @@ def validate_repository(root: Path | None = None) -> dict[str, int | str]:
     policy = _load_json(POLICY_PATH)
     fixed_summary = _load_json(FIXED_SUMMARY_PATH)
     rate_index = _load_json(RATE_INDEX_PATH)
+    contract_fixture = _load_json(CONTRACT_FIXTURE_PATH)
+    sources = {
+        "plugins/mars-cost-router/skills/mars-cost-router/SKILL.md": SKILL_PATH.read_text(
+            encoding="utf-8"
+        ),
+        "docs/PLAYBOOKS.md": PLAYBOOKS_PATH.read_text(encoding="utf-8"),
+        "docs/INSTALL.md": INSTALL_PATH.read_text(encoding="utf-8"),
+        "docs/PRIVACY.md": PRIVACY_PATH.read_text(encoding="utf-8"),
+        "docs/ARCHITECTURE.md": (ROOT / "docs/ARCHITECTURE.md").read_text(
+            encoding="utf-8"
+        ),
+        "docs/EVIDENCE.md": (ROOT / "docs/EVIDENCE.md").read_text(encoding="utf-8"),
+        "README.md": README_PATH.read_text(encoding="utf-8"),
+    }
     marketplace_plugin = _validate_marketplace(marketplace)
     manifest = _validate_manifest(manifest)
-    _validate_policy(policy)
-    _validate_skill(SKILL_PATH.read_text(encoding="utf-8"))
+    policy_lanes = _validate_policy(policy)
+    _validate_contract_fixture(contract_fixture, sources)
+    _validate_skill(sources["plugins/mars-cost-router/skills/mars-cost-router/SKILL.md"], policy_lanes)
+    _validate_public_guides(sources["docs/PLAYBOOKS.md"], policy_lanes)
     _validate_fixed_summary(fixed_summary)
     _validate_rate_index(rate_index)
     _validate_no_runtime_features((marketplace, manifest, policy))

@@ -1,5 +1,30 @@
 # Release Checklist
 
+## 0.3.2 release gates
+
+- [x] Synchronize current package version `0.3.2` across marketplace and plugin
+      metadata, validator, tests, README badge, changelog, and issue template,
+      while retaining the separately versioned `0.3.1` walkthrough links.
+- [x] Run `python scripts/validate_plugin.py` successfully for the local candidate.
+- [x] Run the complete focused unit test suite successfully (14 tests).
+- [x] Run `node video/verify.mjs` successfully.
+- [x] Parse every workspace JSON file, including the contract fixture,
+      with the Python standard library.
+- [x] Confirm fixed-v1.2 evidence files are unchanged and `docs/EVIDENCE.md`
+      exactly excludes the 0.3.2 guidance from that evidence.
+- [x] Confirm the installed package shape and policy lane values are unchanged.
+- [x] Complete local claim and simplification review without adding enforcement,
+      runtime, telemetry, quality-equivalence, or savings claims.
+
+The published 0.3.1 walkthrough remains the intentional current overview. No
+0.3.2 media or video-evidence claim is made by this candidate.
+
+- [ ] Confirm hosted CI passes on the pushed `0.3.2` commit.
+- [ ] Confirm a clean remote marketplace refresh/install reports `0.3.2`.
+- [ ] Tag and publish `0.3.2`.
+- [ ] Verify public package, documentation, and retained 0.3.1 walkthrough links
+      after publication.
+
 ## 0.3.1 release gates
 
 - [x] Synchronize version `0.3.1` across package metadata, marketplace metadata,

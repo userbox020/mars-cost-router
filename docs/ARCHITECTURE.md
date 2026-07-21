@@ -15,7 +15,10 @@ Mars Cost Router is a non-executable plugin presentation: a skill, a versioned p
 - The root decides whether delegation is worthwhile.
 - The root writes the native child request; the plugin does not rewrite it.
 - Every child request should explicitly include model, reasoning effort, and `fork_turns`.
-- The root remains responsible for integration, conflict resolution, and final verification.
+- Each child receives an independently checkable scope. Within a parallel batch, at most one child writer owns each file or area; overlapping work is re-scoped or serialized under root review.
+- Only independent work runs in parallel; dependent work waits until prerequisite evidence is reviewed.
+- The root unconditionally retains cross-cutting integration, conflict resolution, final architectural or product decisions, final verification, and final claims.
+- Commits, publication, deployment, credential access, and destructive actions may be delegated only when the user explicitly authorizes that exact bounded action and existing safety guidance permits it.
 - Native metadata may be inspected when effective settings matter. A requested setting is not proof of an effective setting.
 
 Optional return formats are advisory SKILL guidance, not a runtime schema or enforcement mechanism.

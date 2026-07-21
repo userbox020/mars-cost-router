@@ -7,7 +7,7 @@
 
 > **Unofficial:** Mars Cost Router is not affiliated with or endorsed by OpenAI. “Mars” is this project's brand, not a model.
 
-[![Validate](https://github.com/userbox020/mars-cost-router/actions/workflows/validate.yml/badge.svg)](https://github.com/userbox020/mars-cost-router/actions/workflows/validate.yml) ![Version 0.3.1](https://img.shields.io/badge/version-0.3.1-AD4C32?style=flat-square) ![Tested with Codex CLI 0.144.5](https://img.shields.io/badge/tested-Codex%20CLI%200.144.5-27374D?style=flat-square) ![Instruction-only](https://img.shields.io/badge/mode-Instruction--only-536B55?style=flat-square) ![MIT](https://img.shields.io/badge/license-MIT-E3B341?style=flat-square)
+[![Validate](https://github.com/userbox020/mars-cost-router/actions/workflows/validate.yml/badge.svg)](https://github.com/userbox020/mars-cost-router/actions/workflows/validate.yml) ![Version 0.3.2](https://img.shields.io/badge/version-0.3.2-AD4C32?style=flat-square) ![Tested with Codex CLI 0.144.5](https://img.shields.io/badge/tested-Codex%20CLI%200.144.5-27374D?style=flat-square) ![Instruction-only](https://img.shields.io/badge/mode-Instruction--only-536B55?style=flat-square) ![MIT](https://img.shields.io/badge/license-MIT-E3B341?style=flat-square)
 
 Mars Cost Router is a small local plugin with a three-lane policy for bounded subagent delegation. It gives the root explicit requested settings, supports bounded self-contained child messages, and keeps integration and verification with the root. The instruction-only policy makes route intent reviewable while the root evaluates returned work and, when available, native runtime metadata.
 
@@ -24,18 +24,21 @@ codex plugin add mars-cost-router@mars-plugins
 
 Start a **new Codex session**, open the plugin browser or `@` surface, and select Mars Cost Router. In surfaces that expose Codex skills, `$mars-cost-router` is the skill syntax. Surface availability can vary by Codex version and interface.
 
-See the fuller [installation guide](docs/INSTALL.md).
+Use the concise [Playbooks](docs/PLAYBOOKS.md) for adaptable workflows, and see
+[Install and troubleshooting](docs/INSTALL.md) for setup, refresh, discovery,
+availability, and permission guidance.
 
 ## A reviewable delegation toolkit
 
 | Strength | How it supports a clear handoff |
 | --- | --- |
-| **Explicit lane policy** | Economy, balanced, and premium templates make requested model, effort, and context settings visible. |
-| **Bounded handoffs** | Self-contained messages define one objective, scope, acceptance criteria, and a concise return shape. |
-| **Optional return formats** | Requested locator, edit handoff, change-summary, and review shapes make returned evidence easier for the root to inspect and integrate. |
-| **Root-owned integration** | The root reviews child work, resolves conflicts, and runs final verification. |
-| **Inspectable package** | A compact skill and versioned policy make the advisory request shape easy to read and review. |
-| **Privacy-conscious labels** | Generic task labels and sanitized presentation materials reduce unnecessary sensitive context in public-facing examples. |
+| **Decision-first lane policy** | Root/no-delegation comes first; Premium risk takes precedence, Economy requires every low-risk condition, and Balanced is the delegated default. |
+| **Bounded handoffs** | Self-contained messages define one objective, scope, acceptance criteria, and an optional reviewable return shape. |
+| **Cause-aware recovery** | The root distinguishes weak or conflicting evidence, malformed calls, missing authority, unavailable models, and increased risk without silent substitution. |
+| **Owned decomposition** | The guidance avoids overlapping parallel writer scopes, waits for reviewed prerequisites, and keeps final integration at the root. |
+| **Root acceptance** | The root inspects returned evidence, resolves conflicts, and runs final verification before making final claims. |
+| **Practical playbooks** | Four adaptable workflows cover bounded lookup, focused implementation, security review, and dependent work. |
+| **Inspectable, privacy-conscious package** | A compact skill and versioned policy use generic labels and minimum-necessary context without adding a runtime. |
 | **Verified release path** | Local installation guidance, package validation, and hosted CI provide a direct path to inspect the release. |
 
 ## Three deliberate lanes
@@ -46,7 +49,9 @@ See the fuller [installation guide](docs/INSTALL.md).
 | **Balanced** | focused implementation, tests, documentation, review | `gpt-5.6-terra` · `medium` | `fork_turns: "none"` |
 | **Premium** | security boundaries, difficult debugging, broad uncertainty | `gpt-5.6-sol` · `high` | `fork_turns: "none"` |
 
-Terra is the lower-listed-rate lane under the dated Standard API rate source. The root should escalate only after reviewing weak, conflicting, or risky evidence.
+Terra is the lower-listed-rate lane under the dated Standard API rate source.
+Lane choice follows the decision protocol above; recovery remains a reviewed
+root decision rather than an automatic retry or substitution.
 
 ## How it fits
 
@@ -70,9 +75,9 @@ The skill and versioned policy give the root a clear request shape. The root wri
 
 Use `task_name` as a short, generic, privacy-safe label. Put the bounded objective, scope, permissions, acceptance criteria, and return format in `message`; this keeps each handoff clear for the child and reviewable by the root.
 
-## Watch the 2:20 walkthrough
+## Watch the 0.3.1 walkthrough
 
-[Watch the 2:20 walkthrough](https://github.com/userbox020/mars-cost-router/releases/download/0.3.1/mars-cost-router-explainer-0.3.1.mp4) · [Script](demo/VIDEO_SCRIPT.md) · [Captions](demo/CAPTIONS.vtt) · [Recording checklist](demo/RECORDING_CHECKLIST.md) · [Terminal commands](demo/TERMINAL_COMMANDS.md)
+[Watch the 0.3.1 walkthrough](https://github.com/userbox020/mars-cost-router/releases/download/0.3.1/mars-cost-router-explainer-0.3.1.mp4) · [Script](demo/VIDEO_SCRIPT.md) · [Captions](demo/CAPTIONS.vtt) · [Recording checklist](demo/RECORDING_CHECKLIST.md) · [Terminal commands](demo/TERMINAL_COMMANDS.md)
 
 The video highlights explicit lanes, bounded requests, inspectable instruction-only architecture, sanitized presentation, verified installation/CI, and the fixed-series record. See Evidence for scope and methodology.
 

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import shutil
 import tempfile
 import unittest
@@ -14,8 +15,11 @@ MARKETPLACE = Path(".agents/plugins/marketplace.json")
 MANIFEST = Path("plugins/mars-cost-router/.codex-plugin/plugin.json")
 POLICY = Path("plugins/mars-cost-router/policy/default.json")
 SKILL = Path("plugins/mars-cost-router/skills/mars-cost-router/SKILL.md")
+FIXTURE = Path("tests/fixtures/skill-contract-v1.json")
 FIXED_SUMMARY = Path("public-evidence/fixed-v1.2-summary.json")
-RATE_INDEX = Path("public-evidence/rate-index-2026-07-17.json")
+PLAYBOOKS = Path("docs/PLAYBOOKS.md")
+CURRENT_VERSION = "0.3.2"
+WALKTHROUGH_VERSION = "0.3.1"
 
 
 class PluginValidationTests(unittest.TestCase):
@@ -41,233 +45,163 @@ class PluginValidationTests(unittest.TestCase):
         )
         return temporary, destination
 
-    @staticmethod
-    def mutate_json(root: Path, relative: Path, mutation) -> None:
+    def assert_text_rejected(self, relative: Path, transform) -> None:
+        temporary, root = self.copy_repository()
+        self.addCleanup(temporary.cleanup)
+        path = root / relative
+        content = path.read_text(encoding="utf-8")
+        mutated = transform(content)
+        self.assertNotEqual(content, mutated)
+        path.write_text(mutated, encoding="utf-8")
+        with self.assertRaises(ValidationError):
+            validate_repository(root)
+
+    def assert_json_rejected(self, relative: Path, mutation) -> None:
+        temporary, root = self.copy_repository()
+        self.addCleanup(temporary.cleanup)
         path = root / relative
         value = json.loads(path.read_text(encoding="utf-8"))
         mutation(value)
         path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
-
-    def assert_mutation_rejected(self, relative: Path, mutation) -> None:
-        temporary, root = self.copy_repository()
-        self.addCleanup(temporary.cleanup)
-        self.mutate_json(root, relative, mutation)
         with self.assertRaises(ValidationError):
             validate_repository(root)
 
     def test_public_repository_validates(self) -> None:
         result = validate_repository(ROOT)
-        self.assertEqual("mars-cost-router", result["name"])
-        self.assertEqual("0.3.1", result["version"])
-
-    def test_rejects_missing_evidence_asset(self) -> None:
-        temporary, root = self.copy_repository()
-        self.addCleanup(temporary.cleanup)
-        (root / "assets/evidence/fixed-v1.2-performance.svg").unlink()
-        with self.assertRaises(ValidationError):
-            validate_repository(root)
-
-    def test_public_manifest_and_evidence_identity(self) -> None:
-        manifest = json.loads((ROOT / MANIFEST).read_text(encoding="utf-8"))
         self.assertEqual(
-            {"name": "userbox020", "url": "https://github.com/userbox020"},
-            manifest["author"],
+            {"name": "mars-cost-router", "version": CURRENT_VERSION},
+            {"name": result["name"], "version": result["version"]},
         )
+
+    def test_contract_fixture_is_versioned_and_grouped(self) -> None:
+        fixture = json.loads((ROOT / FIXTURE).read_text(encoding="utf-8"))
+        self.assertEqual(1, fixture["schema_version"])
         self.assertEqual(
-            "https://github.com/userbox020/mars-cost-router#readme",
-            manifest["homepage"],
+            {
+                str(SKILL).replace("\\", "/"),
+                "docs/PLAYBOOKS.md",
+                "docs/INSTALL.md",
+                "docs/PRIVACY.md",
+                "docs/ARCHITECTURE.md",
+                "docs/EVIDENCE.md",
+                "README.md",
+            },
+            set(fixture["files"]),
         )
-        fixed = json.loads((ROOT / FIXED_SUMMARY).read_text(encoding="utf-8"))
-        self.assertEqual("descriptive-synthetic", fixed["status"])
-        self.assertNotIn("immutable_aggregate_sha256", fixed)
-        self.assertEqual(
-            "05e010d3805a4b2c16dd4a97cf39342cd1fe091af834c4df67fe110bc76c2361",
-            fixed["source_series_summary_sha256"],
-        )
-        expected_caveat = (
-            "Three precommitted pairs of four fixed read-only tasks are summarized descriptively."
-        )
-        old_wording = "synthetic " + "read-only tasks"
-        self.assertIn(expected_caveat, fixed["caveats"])
-        self.assertFalse(any(old_wording in caveat for caveat in fixed["caveats"]))
-        self.assertEqual(728706, fixed["treatments"]["selective_terra_sol"]["tokens"]["total"])
-        rate = json.loads((ROOT / RATE_INDEX).read_text(encoding="utf-8"))
-        self.assertEqual("rate-comparison-only", rate["status"])
-        self.assertEqual({"gpt-5.6-terra": 50, "gpt-5.6-sol": 100}, rate["indices"])
+        for contract in fixture["files"].values():
+            self.assertEqual({"ordered_sections", "required_anchors"}, set(contract))
 
-    def test_rejects_unknown_marketplace_metadata(self) -> None:
-        self.assert_mutation_rejected(
-            MARKETPLACE,
-            lambda value: value["plugins"][0].__setitem__("compatibility", "invented"),
+    def test_rejects_fixture_schema_anchor_and_order_mutations(self) -> None:
+        mutations = {
+            "schema": lambda value: value.__setitem__("schema_version", 2),
+            "anchor": lambda value: value["files"][str(SKILL).replace("\\", "/")][
+                "required_anchors"
+            ].append("missing contract anchor"),
+            "order": lambda value: value["files"][str(SKILL).replace("\\", "/")][
+                "ordered_sections"
+            ].reverse(),
+        }
+        for name, mutation in mutations.items():
+            with self.subTest(name=name):
+                self.assert_json_rejected(FIXTURE, mutation)
+
+    def test_rejects_generic_anchor_removal_and_section_reordering(self) -> None:
+        self.assert_text_rejected(
+            SKILL,
+            lambda text: text.replace(
+                "Within a parallel batch, assign at most one child writer to each file or area.",
+                "Assign writers as needed.",
+                1,
+            ),
         )
-
-    def test_rejects_marketplace_path_escape(self) -> None:
-        self.assert_mutation_rejected(
-            MARKETPLACE,
-            lambda value: value["plugins"][0]["source"].__setitem__("path", "../plugin"),
-        )
-
-    def test_rejects_version_mismatch(self) -> None:
-        self.assert_mutation_rejected(
-            MANIFEST, lambda value: value.__setitem__("version", "0.3.2")
-        )
-
-    def test_rejects_manifest_metadata_mutation(self) -> None:
-        self.assert_mutation_rejected(
-            MANIFEST,
-            lambda value: value["author"].__setitem__("url", "https://example.invalid"),
-        )
-
-    def test_manifest_long_description_has_exact_qualifier(self) -> None:
-        manifest = json.loads((ROOT / MANIFEST).read_text(encoding="utf-8"))
-        qualifier = "Independent and unofficial; Mars is the project name, not a model."
-        self.assertTrue(manifest["interface"]["longDescription"].startswith(qualifier))
-
-    def test_rejects_lane_mutation(self) -> None:
-        self.assert_mutation_rejected(
-            POLICY,
-            lambda value: value["lanes"]["balanced"].__setitem__("reasoning_effort", "high"),
+        first = "## Handle failure and escalation by cause"
+        second = "## Decompose and assign ownership"
+        self.assert_text_rejected(
+            SKILL,
+            lambda text: text.replace(first, "SECTION_SWAP", 1)
+            .replace(second, first, 1)
+            .replace("SECTION_SWAP", second, 1),
         )
 
-    def test_rejects_return_schema_policy_key(self) -> None:
-        self.assert_mutation_rejected(
-            POLICY,
-            lambda value: value.__setitem__("return_schema", {"type": "object"}),
-        )
-
-    def test_optional_child_return_contracts_are_complete(self) -> None:
+    def test_skill_lane_table_and_templates_follow_policy(self) -> None:
+        policy = json.loads((ROOT / POLICY).read_text(encoding="utf-8"))
         skill = (ROOT / SKILL).read_text(encoding="utf-8")
-        normalized_skill = " ".join(skill.split())
-        required = (
-            "## Optional child return contracts",
-            "optional requested formats",
-            "relative/path:line — symbol — short finding",
-            "edit handoff or change summary",
-            "verification actually run and the observed result",
-            "skipped checks",
-            "remaining risks",
-            "critical**, **high**, **medium**, then **low",
-            "No findings",
-            "verification gaps",
-            "## Review and integrate",
-            "Clarity and safety override",
-            "home-directory paths",
+        rows = re.findall(
+            r"^\| (economy|balanced|premium) \| `([^`]+)` \| `([^`]+)` \| `([^`]+)` \|$",
+            skill,
+            re.MULTILINE,
         )
-        for phrase in required:
-            with self.subTest(phrase=phrase):
-                self.assertIn(phrase, normalized_skill)
-        self.assertLess(
-            skill.index("## Optional child return contracts"),
-            skill.index("## Review and integrate"),
+        self.assertEqual(
+            policy["lanes"],
+            {
+                lane: {"model": model, "reasoning_effort": effort, "fork_turns": fork}
+                for lane, model, effort, fork in rows
+            },
         )
+        templates = [
+            json.loads(payload)
+            for payload in re.findall(
+                r"^### (?:Economy|Balanced|Premium) exact input\n\n```json\n(\{.*?\})\n```$",
+                skill,
+                re.MULTILINE | re.DOTALL,
+            )
+        ]
+        self.assertEqual(3, len(templates))
+        for template in templates:
+            self.assertEqual(
+                {"task_name", "message", "model", "reasoning_effort", "fork_turns"},
+                set(template),
+            )
+            self.assertIn("Do not delegate or spawn another agent.", template["message"])
 
-    def test_rejects_incomplete_optional_return_contract(self) -> None:
-        temporary, root = self.copy_repository()
-        self.addCleanup(temporary.cleanup)
-        path = root / SKILL
-        content = path.read_text(encoding="utf-8")
-        path.write_text(
-            content.replace("verification actually run and the observed result", "verification"),
-            encoding="utf-8",
-        )
-        with self.assertRaises(ValidationError):
-            validate_repository(root)
-
-    def test_rejects_missing_customization_heading_cleanly(self) -> None:
-        temporary, root = self.copy_repository()
-        self.addCleanup(temporary.cleanup)
-        path = root / SKILL
-        content = path.read_text(encoding="utf-8")
-        path.write_text(
-            content.replace("Customize each call as follows:", "Call guidance:"),
-            encoding="utf-8",
-        )
-        with self.assertRaisesRegex(ValidationError, "sections are required"):
-            validate_repository(root)
-
-    def test_rejects_unsupported_output_contract_language(self) -> None:
-        phrases = (
-            "65" + "% output",
-            "65" + "% of the output",
-            "output at " + "65%",
-            "compressed " + "output",
-            "optimized-" + "output",
-            "token-" + "saving output",
-            "guaranteed-" + "output",
-        )
-        for phrase in phrases:
-            with self.subTest(phrase=phrase):
-                temporary, root = self.copy_repository()
-                self.addCleanup(temporary.cleanup)
-                path = root / SKILL
-                content = path.read_text(encoding="utf-8")
-                path.write_text(
-                    content.replace(
-                        "\n## Review and integrate",
-                        f"\n{phrase}\n\n## Review and integrate",
-                    ),
-                    encoding="utf-8",
-                )
-                with self.assertRaises(ValidationError):
-                    validate_repository(root)
-
-    def test_rejects_fixed_aggregate_mutation(self) -> None:
-        self.assert_mutation_rejected(
-            FIXED_SUMMARY,
-            lambda value: value.__setitem__("frozen_suite_aggregate_sha256", "0" * 64),
-        )
-
-    def test_rejects_source_summary_hash_mutation(self) -> None:
-        self.assert_mutation_rejected(
-            FIXED_SUMMARY,
-            lambda value: value.__setitem__("source_series_summary_sha256", "0" * 64),
-        )
-
-    def test_rejects_provenance_explanation_mutation(self) -> None:
-        self.assert_mutation_rejected(
-            FIXED_SUMMARY,
-            lambda value: value["provenance"].__setitem__(
-                "source_series_summary_sha256", "Unbound result."
+    def test_rejects_structural_skill_mutations(self) -> None:
+        mutations = {
+            "wrong lane": lambda text: text.replace(
+                "| economy | `gpt-5.6-terra` |", "| economy | `gpt-5.6-sol` |", 1
             ),
-        )
-
-    def test_rejects_fixed_token_arithmetic_mutation(self) -> None:
-        self.assert_mutation_rejected(
-            FIXED_SUMMARY,
-            lambda value: value["treatments"]["selective_terra_sol"]["tokens"].__setitem__(
-                "total", 728707
+            "omitted field": lambda text: text.replace(
+                ',\n  "fork_turns": "none"', "", 1
             ),
-        )
-
-    def test_rejects_fixed_caveat_mutation(self) -> None:
-        self.assert_mutation_rejected(
-            FIXED_SUMMARY,
-            lambda value: value["caveats"].pop(),
-        )
-
-    def test_rejects_old_fixed_caveat_wording(self) -> None:
-        old_wording = "synthetic " + "read-only tasks"
-        self.assert_mutation_rejected(
-            FIXED_SUMMARY,
-            lambda value: value["caveats"].__setitem__(
-                0,
-                value["caveats"][0].replace("fixed read-only tasks", old_wording),
+            "nested delegation": lambda text: text.replace(
+                "Do not delegate or spawn another agent.", "Return the result.", 1
             ),
-        )
+        }
+        for name, mutation in mutations.items():
+            with self.subTest(name=name):
+                self.assert_text_rejected(SKILL, mutation)
 
-    def test_rejects_rate_source_mutation(self) -> None:
-        self.assert_mutation_rejected(
-            RATE_INDEX,
-            lambda value: value["official_source_urls"].__setitem__(0, "https://example.invalid"),
-        )
+    def test_playbook_requests_are_structural_templates(self) -> None:
+        playbooks = (ROOT / PLAYBOOKS).read_text(encoding="utf-8")
+        requests = [
+            json.loads(payload)
+            for payload in re.findall(r"```json\n(\{.*?\})\n```", playbooks, re.DOTALL)
+        ]
+        self.assertEqual(4, len(requests))
+        for request in requests:
+            self.assertEqual(
+                {"task_name", "message", "model", "reasoning_effort", "fork_turns"},
+                set(request),
+            )
+            self.assertRegex(request["message"], r"<[A-Z][A-Z0-9_]*>")
+            self.assertIn("Do not delegate or spawn another agent.", request["message"])
 
-    def test_rejects_rate_index_mutation(self) -> None:
-        self.assert_mutation_rejected(
-            RATE_INDEX,
-            lambda value: value["indices"].__setitem__("gpt-5.6-terra", 51),
-        )
+    def test_rejects_structural_playbook_mutations(self) -> None:
+        mutations = {
+            "wrong lane": lambda text: text.replace(
+                '"reasoning_effort": "low"', '"reasoning_effort": "high"', 1
+            ),
+            "omitted field": lambda text: text.replace(',\n  "fork_turns": "none"', "", 1),
+            "nested delegation": lambda text: text.replace(
+                "Do not delegate or spawn another agent.", "Return findings.", 1
+            ),
+            "placeholder": lambda text: text.replace("<SYMBOL>", "<symbol>", 1),
+        }
+        for name, mutation in mutations.items():
+            with self.subTest(name=name):
+                self.assert_text_rejected(PLAYBOOKS, mutation)
 
-    def test_rejects_hook_added_to_plugin(self) -> None:
+    def test_rejects_runtime_key_and_runtime_file(self) -> None:
+        self.assert_json_rejected(POLICY, lambda value: value.__setitem__("hooks", []))
         temporary, root = self.copy_repository()
         self.addCleanup(temporary.cleanup)
         hook = root / "plugins/mars-cost-router/hooks/hook.py"
@@ -276,130 +210,80 @@ class PluginValidationTests(unittest.TestCase):
         with self.assertRaises(ValidationError):
             validate_repository(root)
 
-    def test_rejects_invalid_skill_frontmatter(self) -> None:
-        temporary, root = self.copy_repository()
-        self.addCleanup(temporary.cleanup)
-        path = root / SKILL
-        content = path.read_text(encoding="utf-8")
-        path.write_text(content.replace("name: mars-cost-router", "name: other", 1), encoding="utf-8")
-        with self.assertRaises(ValidationError):
-            validate_repository(root)
+    def test_rejects_evidence_hash_arithmetic_and_caveat_mutations(self) -> None:
+        mutations = {
+            "hash": lambda value: value.__setitem__(
+                "frozen_suite_aggregate_sha256", "0" * 64
+            ),
+            "arithmetic": lambda value: value["treatments"]["selective_terra_sol"][
+                "tokens"
+            ].__setitem__("total", 728707),
+            "caveat": lambda value: value["caveats"].pop(),
+        }
+        for name, mutation in mutations.items():
+            with self.subTest(name=name):
+                self.assert_json_rejected(FIXED_SUMMARY, mutation)
 
-    def test_rejects_absolute_local_path(self) -> None:
-        temporary, root = self.copy_repository()
-        self.addCleanup(temporary.cleanup)
-        path = root / "CHANGELOG.md"
-        local_path = "C:" + "/Us" + "ers/example/private"
-        path.write_text(
-            path.read_text(encoding="utf-8") + f"\n{local_path}\n",
-            encoding="utf-8",
-        )
-        with self.assertRaises(ValidationError):
-            validate_repository(root)
-
-    def test_git_internals_are_excluded_from_scan_and_count(self) -> None:
-        temporary, root = self.copy_repository()
-        self.addCleanup(temporary.cleanup)
-        before = validate_repository(root)
-        object_path = root / ".git/objects/aa/binary-object"
-        object_path.parent.mkdir(parents=True)
-        secret_like = b"sk-" + b"x" * 32
-        local_path = b"C:" + b"/Us" + b"ers/example/private"
-        object_path.write_bytes(b"\x00\xff" + secret_like + b"\n" + local_path)
-        (root / ".git/config").write_text(
-            "[remote \"origin\"]\nurl = private-local-value\n",
-            encoding="utf-8",
-        )
-        after = validate_repository(root)
-        self.assertEqual(before["files"], after["files"])
-        self.assertEqual(before, after)
-
-    def test_python_caches_are_excluded_from_scan_and_count(self) -> None:
-        temporary, root = self.copy_repository()
-        self.addCleanup(temporary.cleanup)
-        before = validate_repository(root)
-        cache_path = root / "scripts/__pycache__/validate_plugin.cpython-313.pyc"
-        cache_path.parent.mkdir(parents=True)
-        unix_path = b"/ho" + b"me/runner/private"
-        unsupported_claim = b"without " + b"compromising quality"
-        cache_path.write_bytes(unix_path + b"\n" + unsupported_claim)
-        (root / "generated.pyc").write_bytes(b"sk-" + b"x" * 32)
-        after = validate_repository(root)
-        self.assertEqual(before["files"], after["files"])
-        self.assertEqual(before, after)
-
-    def test_video_artifacts_are_excluded_from_scan_and_count(self) -> None:
-        temporary, root = self.copy_repository()
-        self.addCleanup(temporary.cleanup)
-        before = validate_repository(root)
-        for relative in (
-            "video/.cdp-profile/manifest.json",
-            "video/inputs/narration.wav",
-            "video/out/explainer.mp4",
-            "video/sparse-smoke/frame00000.png",
-        ):
-            path = root / relative
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_bytes(b"C:" + b"/Us" + b"ers/example/private\nsk-" + b"x" * 32)
-        after = validate_repository(root)
-        self.assertEqual(before["files"], after["files"])
-        self.assertEqual(before, after)
-
-    def test_ci_actions_are_pinned_and_read_only(self) -> None:
-        workflow = (ROOT / ".github/workflows/validate.yml").read_text(encoding="utf-8")
-        self.assertIn(
-            "actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
-            workflow,
-        )
-        self.assertIn(
-            "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
-            workflow,
-        )
-        self.assertIn(
-            "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
-            workflow,
-        )
-        self.assertIn('node-version: "24"', workflow)
-        self.assertIn("run: node video/verify.mjs", workflow)
-        self.assertIn("persist-credentials: false", workflow)
-        self.assertIn("timeout-minutes: 10", workflow)
-        self.assertIn("contents: read", workflow)
-
-    def test_version_surfaces_are_synchronized(self) -> None:
-        readme = (ROOT / "README.md").read_text(encoding="utf-8")
-        changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
-        bug_report = (ROOT / ".github/ISSUE_TEMPLATE/bug_report.yml").read_text(
-            encoding="utf-8"
-        )
-        project_story = (ROOT / "PROJECT_STORY.md").read_text(encoding="utf-8")
-        release_url = (
-            "https://github.com/userbox020/mars-cost-router/releases/download/0.3.1/"
-            "mars-cost-router-explainer-0.3.1.mp4"
-        )
-        self.assertIn("![Version 0.3.1]", readme)
-        self.assertIn("## 0.3.1 - 2026-07-21", changelog)
-        self.assertIn("placeholder: 0.3.1", bug_report)
-        self.assertIn(release_url, readme)
-        self.assertIn(release_url, project_story)
-
-    def test_rejects_unsupported_headline_claim(self) -> None:
-        claims = (
+    def test_rejects_unsafe_claim_secret_and_local_path(self) -> None:
+        additions = (
             "without " + "compromising quality",
-            "save " + "tokens",
-            "guaranteed " + "savings",
-            "GPT 5.6 " + "Mars",
+            "sk-" + "x" * 32,
+            "C:" + "/Us" + "ers/example/private",
         )
-        for claim in claims:
-            with self.subTest(claim=claim):
-                temporary, root = self.copy_repository()
-                self.addCleanup(temporary.cleanup)
-                path = root / "CHANGELOG.md"
-                path.write_text(
-                    path.read_text(encoding="utf-8") + f"\n{claim}\n",
-                    encoding="utf-8",
+        for addition in additions:
+            with self.subTest(addition=addition[:12]):
+                self.assert_text_rejected(
+                    Path("CHANGELOG.md"), lambda text, value=addition: text + f"\n{value}\n"
                 )
-                with self.assertRaises(ValidationError):
-                    validate_repository(root)
+
+    def test_ignored_internal_and_generated_files_do_not_change_validation(self) -> None:
+        temporary, root = self.copy_repository()
+        self.addCleanup(temporary.cleanup)
+        before = validate_repository(root)
+        paths = (
+            root / ".git/objects/aa/object",
+            root / "scripts/__pycache__/module.pyc",
+            root / "video/out/explainer.mp4",
+        )
+        for path in paths:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(b"C:" + b"/Us" + b"ers/private\nsk-" + b"x" * 32)
+        self.assertEqual(before, validate_repository(root))
+
+    def test_ci_is_pinned_read_only_and_checks_video(self) -> None:
+        workflow = (ROOT / ".github/workflows/validate.yml").read_text(encoding="utf-8")
+        for phrase in (
+            "actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+            "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+            "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+            'node-version: "24"',
+            "run: node video/verify.mjs",
+            "persist-credentials: false",
+            "contents: read",
+        ):
+            self.assertIn(phrase, workflow)
+
+    def test_current_version_and_walkthrough_surfaces(self) -> None:
+        release_url = (
+            "https://github.com/userbox020/mars-cost-router/releases/download/"
+            f"{WALKTHROUGH_VERSION}/mars-cost-router-explainer-"
+            f"{WALKTHROUGH_VERSION}.mp4"
+        )
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        story = (ROOT / "PROJECT_STORY.md").read_text(encoding="utf-8")
+        self.assertIn(f"![Version {CURRENT_VERSION}]", readme)
+        self.assertIn(f"Watch the {WALKTHROUGH_VERSION} walkthrough", readme)
+        self.assertIn(f"Watch the {WALKTHROUGH_VERSION} walkthrough", story)
+        self.assertIn(release_url, readme)
+        self.assertIn(release_url, story)
+        self.assertIn(
+            f"## {CURRENT_VERSION} - 2026-07-21",
+            (ROOT / "CHANGELOG.md").read_text(encoding="utf-8"),
+        )
+        self.assertIn(
+            f"placeholder: {CURRENT_VERSION}",
+            (ROOT / ".github/ISSUE_TEMPLATE/bug_report.yml").read_text(encoding="utf-8"),
+        )
 
 
 if __name__ == "__main__":

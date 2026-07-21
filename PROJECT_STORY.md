@@ -20,17 +20,19 @@ reviewed: in narrow task definitions, deliberate escalation, and final root
 verification.
 
 The innovation is not hidden model selection. It is an inspectable decision
-protocol that makes route intent, escalation, and verification explicit using
-native Codex fields.
+protocol: decide whether delegation is worthwhile, let risk take precedence,
+assign non-overlapping bounded work in dependency order, recover by cause, and
+verify acceptance at the root using native Codex fields.
 
 Mars is the project name, not a model. This is an independent, unofficial
 project and is not affiliated with or endorsed by OpenAI.
 
 > **Judge summary:** Mars packages a transparent three-lane request policy, not
 > an automated router. The installed plugin is instruction-only and keeps
-> integration and verification at the root. Remote installation and hosted
-> cross-platform validation passed. Its fixed read-only evidence is descriptive
-> only and supports neither quality-equivalence nor savings claims.
+> integration and verification at the root. The published 0.3.1 release passed
+> remote installation and hosted cross-platform validation. Its fixed read-only
+> evidence is descriptive only and supports neither quality-equivalence nor
+> savings claims.
 
 ## Inspiration
 
@@ -62,13 +64,19 @@ Mars provides three requested settings:
 | **Balanced** | focused implementation, tests, documentation, review | `gpt-5.6-terra`, `medium`, `fork_turns: "none"` |
 | **Premium** | security boundaries, difficult debugging, broad uncertainty | `gpt-5.6-sol`, `high`, `fork_turns: "none"` |
 
-Every child message must be bounded and self-contained. Children are told not
-to delegate again. Weak, conflicting, or risky evidence returns to the root for
-review and possible escalation.
+The root keeps tiny or tightly coupled work, then applies Premium risk
+precedence, the all-condition Economy rule, or the Balanced delegated default.
+The skill calls for bounded, self-contained child messages. It directs the root
+to avoid overlapping parallel writer scopes, wait for reviewed prerequisites,
+and prohibit nested delegation. Weak, conflicting, malformed, unavailable,
+unauthorized, or newly risky work returns to the root for cause-specific review
+rather than silent substitution.
 
 The skill also offers optional requested formats for read-only locators, focused
-edit handoffs, and review findings so the root can inspect and integrate returned
-work consistently.
+edit handoffs, and review findings. Four concise
+[playbooks](docs/PLAYBOOKS.md) show how to adapt the protocol for a lookup,
+implementation, security review, or dependent task without claiming runtime
+enforcement.
 
 This is how Mars manages review risk: it does not claim the lanes are
 equivalent; it makes scope, escalation criteria, and root verification explicit.
@@ -96,8 +104,8 @@ I also built the deterministic source project for a 2:20 explainer under
 `video/`. It renders 4,200 frame-addressed 1080p frames over 140 seconds. It
 generates local narration and an original procedural audio bed, verifies caption
 and scene bounds, and uses GPU-assisted capture and encoding when available. No
-account screen, private prompt, or downloaded media is required. [Watch the
-finished 2:20 walkthrough](https://github.com/userbox020/mars-cost-router/releases/download/0.3.1/mars-cost-router-explainer-0.3.1.mp4).
+account screen, private prompt, or downloaded media is required.
+[Watch the 0.3.1 walkthrough](https://github.com/userbox020/mars-cost-router/releases/download/0.3.1/mars-cost-router-explainer-0.3.1.mp4).
 
 ## Judge installation and testing path
 
