@@ -19,8 +19,8 @@
 The published 0.3.1 walkthrough remains the intentional current overview. No
 0.3.2 media or video-evidence claim is made by this candidate.
 
-- [ ] Confirm hosted CI passes on the pushed `0.3.2` commit.
-- [ ] Confirm a clean remote marketplace refresh/install reports `0.3.2`.
+- [x] Confirm hosted CI passes on the pushed `0.3.2` commit.
+- [x] Confirm a clean remote marketplace refresh/install reports `0.3.2`.
 - [ ] Tag and publish `0.3.2`.
 - [ ] Verify public package, documentation, and retained 0.3.1 walkthrough links
       after publication.
