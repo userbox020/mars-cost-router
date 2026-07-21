@@ -6,6 +6,8 @@
   "scripts": {
     "verify": "node verify.mjs",
     "audio": "powershell -ExecutionPolicy Bypass -File .\\audio.ps1",
-    "render": "powershell -ExecutionPolicy Bypass -File .\\render.ps1"
+    "render": "powershell -ExecutionPolicy Bypass -File .\\render.ps1",
+    "smoke": "powershell -ExecutionPolicy Bypass -File .\\smoke.ps1",
+    "benchmark": "powershell -ExecutionPolicy Bypass -File .\\benchmark.ps1"
   }
 }

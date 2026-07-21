@@ -14,7 +14,7 @@ Mars Cost Router has no runtime hooks, executable runtime, receipt store, teleme
 
 ## Evidence hygiene
 
-Local evaluation artifacts can contain thread identifiers, runtime metadata, or prompt content. Review and redact material before sharing it. Screenshots and video should use synthetic tasks, generic labels, and sanitized payloads.
+Local evaluation artifacts can contain thread identifiers, runtime metadata, or prompt content. Review and redact material before sharing it. Screenshots and video should use non-sensitive tasks, generic labels, and sanitized payloads.
 
 ## What to verify
 

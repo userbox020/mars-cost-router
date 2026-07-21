@@ -72,6 +72,12 @@ class PluginValidationTests(unittest.TestCase):
             "05e010d3805a4b2c16dd4a97cf39342cd1fe091af834c4df67fe110bc76c2361",
             fixed["source_series_summary_sha256"],
         )
+        expected_caveat = (
+            "Three precommitted pairs of four fixed read-only tasks are summarized descriptively."
+        )
+        old_wording = "synthetic " + "read-only tasks"
+        self.assertIn(expected_caveat, fixed["caveats"])
+        self.assertFalse(any(old_wording in caveat for caveat in fixed["caveats"]))
         self.assertEqual(728706, fixed["treatments"]["selective_terra_sol"]["tokens"]["total"])
         rate = json.loads((ROOT / RATE_INDEX).read_text(encoding="utf-8"))
         self.assertEqual("rate-comparison-only", rate["status"])
@@ -143,6 +149,16 @@ class PluginValidationTests(unittest.TestCase):
         self.assert_mutation_rejected(
             FIXED_SUMMARY,
             lambda value: value["caveats"].pop(),
+        )
+
+    def test_rejects_old_fixed_caveat_wording(self) -> None:
+        old_wording = "synthetic " + "read-only tasks"
+        self.assert_mutation_rejected(
+            FIXED_SUMMARY,
+            lambda value: value["caveats"].__setitem__(
+                0,
+                value["caveats"][0].replace("fixed read-only tasks", old_wording),
+            ),
         )
 
     def test_rejects_rate_source_mutation(self) -> None:

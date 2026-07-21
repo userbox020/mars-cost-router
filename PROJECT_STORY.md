@@ -29,7 +29,7 @@ project and is not affiliated with or endorsed by OpenAI.
 > **Judge summary:** Mars packages a transparent three-lane request policy, not
 > an automated router. The installed plugin is instruction-only and keeps
 > integration and verification at the root. Remote installation and hosted
-> cross-platform validation passed. Its fixed synthetic evidence is descriptive
+> cross-platform validation passed. Its fixed read-only evidence is descriptive
 > only and supports neither quality-equivalence nor savings claims.
 
 ## Inspiration
@@ -88,11 +88,11 @@ The installed plugin has no hook, executable runtime, MCP configuration,
 telemetry collector, receipt store, or mutable project-wide state. That reduces
 the trust surface and keeps the policy inspectable.
 
-I also built the deterministic source project for a three-minute explainer under
-`video/`. It renders 5,400 frame-addressed 1080p frames, generates local
-narration and an original procedural audio bed, verifies caption and scene
-bounds, and uses GPU-assisted capture and encoding when available. No account
-screen, private prompt, or downloaded media is required.
+I also built the deterministic source project for a 2:20 explainer under
+`video/`. It renders 4,200 frame-addressed 1080p frames over 140 seconds. It
+generates local narration and an original procedural audio bed, verifies caption
+and scene bounds, and uses GPU-assisted capture and encoding when available. No
+account screen, private prompt, or downloaded media is required.
 
 ## Judge installation and testing path
 
@@ -138,8 +138,8 @@ publishing private prompts or raw local evidence.
 ## What the fixed suite recorded
 
 The public fixed-v1.2 record compares a selective Terra/Sol policy with an
-all-Sol/high baseline across three precommitted pairs of four synthetic,
-read-only tasks. Both treatments passed **12/12 deterministic checks** and had
+all-Sol/high baseline across three precommitted pairs of four fixed read-only
+tasks. Both treatments passed **12/12 deterministic checks** and had
 zero observed automatic retries and reroutes.
 
 For a recorded metric \(x\), the descriptive percentage difference is:
@@ -162,7 +162,7 @@ tokens. Because order and cache effects were not isolated, the duration is a
 recorded timing observation—not evidence that the policy is faster or causes
 lower latency.
 
-These are descriptive observations from this fixed synthetic series. The runs
+These are descriptive observations from this fixed read-only series. The runs
 are order- and cache-confounded. They do not establish causal token or latency
 improvement, general quality, quality equivalence, API-dollar or ChatGPT-credit
 savings, billing outcomes, or proof that requested and effective routes matched.
@@ -212,7 +212,7 @@ policy inspection to evidence review.
 - **Requested settings and effective settings are different facts.** A useful
   tool should say which one it knows.
 - **Quality claims need evidence, not a slogan.** The plugin requires bounded
-  tasks and root review; the project evaluates its fixed synthetic suite with
+  tasks and root review; the project evaluates its fixed read-only suite with
   deterministic checks rather than claiming that the lanes are equivalent.
 - **Evidence is strongest when its limits are executable.** The public validator
   checks arithmetic, provenance, package boundaries, and claim language instead

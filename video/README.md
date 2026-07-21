@@ -1,6 +1,6 @@
 # Mars Cost Router — animated explainer
 
-A local, dependency-light, frame-addressable 3:00 presentation. It uses the
+A local, dependency-light, frame-addressable 2:20 presentation. It uses the
 project's existing SVG assets and the approved script, shot list, captions, and
 evidence wording. Nothing is fetched from the network.
 
@@ -16,7 +16,7 @@ evidence wording. Nothing is fetched from the network.
 ## Preview
 
 Open `index.html` in a browser, or use a local static server. Add
-`?frame=3000` to inspect an exact frame; render time is always `frame / 30`.
+`?frame=2100` to inspect an exact frame; render time is always `frame / 30`.
 `?clean=1` hides the safe-area and timecode preview guides.
 
 Every visual motion state is calculated from the requested frame, not from
@@ -29,13 +29,13 @@ exposes `window.setFrame(frameNumber)`.
 powershell -ExecutionPolicy Bypass -File .\smoke.ps1
 ```
 
-This starts one browser and captures frames `123`, `127`, `300`, `1350`, `3150`, `4350`, and `4950`
+This starts one browser and captures frames `123`, `127`, `300`, `1350`, `3150`, `3540`, `3840`, `4050`, and `4199`
 without rendering the intervening frames. The CDP renderer asserts the requested
 frame identity, clock, and chapter before each screenshot, then fails if the PNG hashes
 are all equal. Captures are kept in ignored `sparse-smoke/` for inspection.
 It also checks the centered caption and main scene viewport bounds at every
 requested frame (2 px tolerance); the selected frames cover the long captions
-at 10, 45, 105, 145, and 165 seconds.
+at 10, 45, 105, and 118 seconds, plus the late caveat, outro, and final frame.
 
 ## GPU capture and encoding
 
@@ -80,7 +80,7 @@ powershell -ExecutionPolicy Bypass -File .\render.ps1
 ```
 
 `render.ps1` produces `out/mars-cost-router-explainer.mp4` at **1920×1080,
-30 FPS, exactly 180 seconds**. It keeps one headless Edge/Chrome process alive,
+30 FPS, exactly 140 seconds**. It keeps one headless Edge/Chrome process alive,
 uses Node's built-in Chrome DevTools Protocol client to set every exact frame
 and capture its PNG, then encodes with FFmpeg. No npm package, remote service,
 or network asset is used. The default video has no audio track.
@@ -89,7 +89,7 @@ Useful render options:
 
 ```powershell
 # Quick persistent-browser visual smoke render
-powershell -ExecutionPolicy Bypass -File .\render.ps1 -StartFrame 3600 -EndFrame 3630 -Output out\smoke.mp4
+powershell -ExecutionPolicy Bypass -File .\render.ps1 -StartFrame 2700 -EndFrame 2730 -Output out\smoke.mp4
 
 # Full render with the locally generated audio and approved subtitles
 powershell -ExecutionPolicy Bypass -File .\render.ps1 -Narration inputs\narration.wav -BackgroundAudio inputs\background.wav -Subtitles
@@ -109,9 +109,9 @@ powershell -ExecutionPolicy Bypass -File .\audio.ps1
 approved `../demo/VIDEO_SCRIPT.md`, then speaks each cue separately using the
 installed local **Microsoft Zira Desktop** voice. Each cue is paced only with
 FFmpeg `atempo` stages between `0.5` and `2.0`, then padded or trimmed to its
-approved boundary: `0/15/35/55/75/100/120/140/160/170/180`. It writes ignored,
+approved boundary: `0/12/27/43/58/78/94/110/126/133/140`. It writes ignored,
 48 kHz stereo PCM WAV files to `inputs/narration.wav` and
-`inputs/background.wav`, and fails if FFprobe does not report exact 180.000 s,
+`inputs/background.wav`, and fails if FFprobe does not report exact 140.000 s,
 stereo, and 48 kHz for both outputs.
 
 The background is original deterministic procedural audio generated locally by
@@ -123,7 +123,7 @@ audio provenance.
 
 - `inputs/narration.wav` begins at 00:00:00 and contains the exact approved
   narration cue copy.
-- `inputs/background.wav` begins at 00:00:00 and is exactly 180 seconds.
+- `inputs/background.wav` begins at 00:00:00 and is exactly 140 seconds.
 - `-Subtitles` muxes the unchanged `../demo/CAPTIONS.vtt` as a selectable
   subtitle track. The visual captions in the animation use that same approved
   cue text. No captions are burned in by default.

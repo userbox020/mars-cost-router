@@ -2,7 +2,7 @@
 
 ## Before recording
 
-- [ ] Use a clean local profile and a synthetic, read-only workspace.
+- [ ] Use a clean local profile and a read-only workspace.
 - [ ] Confirm the installed plugin name and version without showing account details.
 - [ ] Close terminals, tabs, notifications, and sidebars that can reveal names, paths, IDs, prompts, or tokens.
 - [ ] Use the static policy and sanitized payload; do not need a live model call.
@@ -18,7 +18,7 @@
 
 ## Before export
 
-- [ ] Confirm the cut is exactly 3:00.
+- [ ] Confirm the cut is exactly 2:20.
 - [ ] Confirm the caveat card is readable and all evidence language is descriptive.
 - [ ] Review at 100% scale for clipped terminal text and contrast.
 - [ ] Include `CAPTIONS.vtt` and verify its timestamps align with narration.

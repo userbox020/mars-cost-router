@@ -14,7 +14,7 @@ $scriptPath = Join-Path $root '..\demo\VIDEO_SCRIPT.md'
 $inputs = Join-Path $root 'inputs'
 $work = Join-Path $root 'audio-work'
 $sampleRate = 48000
-$totalSeconds = 180.0
+$totalSeconds = 140.0
 
 function Get-AudioProbe([string]$Path) {
   $json = & ffprobe -v error -select_streams a:0 -show_entries stream=codec_type,sample_rate,channels:format=duration -of json $Path
@@ -103,14 +103,14 @@ try {
 
   # Original procedural atmosphere: deterministic low-frequency dunes, filtered
   # pink dust, and non-melodic chapter shifts at the approved cue transitions.
-  $left = '0.026*sin(2*PI*55*t)+0.012*sin(2*PI*82.5*t)+0.006*sin(2*PI*(110+0.35*sin(2*PI*t/47))*t)+0.004*sin(2*PI*220*t)*(0.5+0.5*sin(2*PI*t/13))+0.005*(between(t,15,35)*sin(2*PI*61*t)+between(t,55,75)*sin(2*PI*73*t)+between(t,100,120)*sin(2*PI*65*t)+between(t,140,160)*sin(2*PI*69*t)+between(t,170,180)*sin(2*PI*58*t))'
-  $right = '0.025*sin(2*PI*55*t+0.17)+0.011*sin(2*PI*82.5*t+0.41)+0.006*sin(2*PI*(110+0.31*sin(2*PI*t/53))*t+0.27)+0.004*sin(2*PI*220*t+0.5)*(0.5+0.5*sin(2*PI*t/17))+0.005*(between(t,15,35)*sin(2*PI*61*t+0.3)+between(t,55,75)*sin(2*PI*73*t+0.5)+between(t,100,120)*sin(2*PI*65*t+0.2)+between(t,140,160)*sin(2*PI*69*t+0.7)+between(t,170,180)*sin(2*PI*58*t+0.4))'
+  $left = '0.026*sin(2*PI*55*t)+0.012*sin(2*PI*82.5*t)+0.006*sin(2*PI*(110+0.35*sin(2*PI*t/47))*t)+0.004*sin(2*PI*220*t)*(0.5+0.5*sin(2*PI*t/13))+0.005*(between(t,12,27)*sin(2*PI*61*t)+between(t,43,58)*sin(2*PI*73*t)+between(t,78,94)*sin(2*PI*65*t)+between(t,110,126)*sin(2*PI*69*t)+between(t,133,140)*sin(2*PI*58*t))'
+  $right = '0.025*sin(2*PI*55*t+0.17)+0.011*sin(2*PI*82.5*t+0.41)+0.006*sin(2*PI*(110+0.31*sin(2*PI*t/53))*t+0.27)+0.004*sin(2*PI*220*t+0.5)*(0.5+0.5*sin(2*PI*t/17))+0.005*(between(t,12,27)*sin(2*PI*61*t+0.3)+between(t,43,58)*sin(2*PI*73*t+0.5)+between(t,78,94)*sin(2*PI*65*t+0.2)+between(t,110,126)*sin(2*PI*69*t+0.7)+between(t,133,140)*sin(2*PI*58*t+0.4))'
   $bedSource = "aevalsrc=exprs='${left}|${right}':s=${sampleRate}:d=${totalSeconds}"
   $background = Join-Path $inputs 'background.wav'
-  & ffmpeg -y -f lavfi -i $bedSource -f lavfi -i "anoisesrc=color=pink:sample_rate=${sampleRate}:duration=${totalSeconds}:seed=1976" -filter_complex '[1:a]lowpass=f=900,highpass=f=70,volume=0.018[dust];[0:a][dust]amix=inputs=2:normalize=0,afade=t=in:st=0:d=3,afade=t=out:st=177:d=3,alimiter=limit=0.20,aformat=sample_rates=48000:channel_layouts=stereo' -ar $sampleRate -ac 2 -c:a pcm_s16le -t $totalSeconds $background
+  & ffmpeg -y -f lavfi -i $bedSource -f lavfi -i "anoisesrc=color=pink:sample_rate=${sampleRate}:duration=${totalSeconds}:seed=1976" -filter_complex '[1:a]lowpass=f=900,highpass=f=70,volume=0.018[dust];[0:a][dust]amix=inputs=2:normalize=0,afade=t=in:st=0:d=3,afade=t=out:st=137:d=3,alimiter=limit=0.20,aformat=sample_rates=48000:channel_layouts=stereo' -ar $sampleRate -ac 2 -c:a pcm_s16le -t $totalSeconds $background
   if ($LASTEXITCODE -ne 0) { throw 'FFmpeg procedural background generation failed.' }
   Assert-Audio $background $totalSeconds 'Background audio' | Out-Null
-  Write-Host "PASS: exact approved cue boundaries assembled; narration.wav and background.wav are stereo $sampleRate Hz, 180.000 seconds."
+  Write-Host "PASS: exact approved cue boundaries assembled; narration.wav and background.wav are stereo $sampleRate Hz, 140.000 seconds."
 }
 finally {
   $speaker.Dispose()

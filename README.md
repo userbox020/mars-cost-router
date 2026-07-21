@@ -46,7 +46,9 @@ Terra is the lower-listed-rate lane under the dated Standard API rate source. Th
 
 ## How it fits
 
-![Delegation flow: policy informs root; root makes bounded child calls and verifies results](assets/diagrams/delegation-flow.svg)
+<p align="center">
+  <img src="assets/diagrams/delegation-flow.svg" alt="Delegation flow: policy informs the root; the root makes bounded child calls and verifies returned work." width="1000" />
+</p>
 
 The skill and versioned policy inform the root. The root writes the child request, receives the result, and owns final verification. Native child metadata, when available, is evidence to inspect—not a claim made by this package.
 
@@ -64,17 +66,19 @@ The skill and versioned policy inform the root. The root writes the child reques
 
 `task_name` is only a generic, privacy-safe label. Do not place prompts, paths, filenames, user data, rationale, credentials, or secrets in it.
 
-## Watch the three-minute walkthrough
+## Watch the 2:20 walkthrough
 
-[Three-minute walkthrough script](demo/VIDEO_SCRIPT.md) · [Captions](demo/CAPTIONS.vtt) · [Recording checklist](demo/RECORDING_CHECKLIST.md) · [Terminal commands](demo/TERMINAL_COMMANDS.md)
+[2:20 walkthrough script](demo/VIDEO_SCRIPT.md) · [Captions](demo/CAPTIONS.vtt) · [Recording checklist](demo/RECORDING_CHECKLIST.md) · [Terminal commands](demo/TERMINAL_COMMANDS.md)
 
 Final video URL pending. The walkthrough uses static policy inspection and sanitized examples. It does not expose private prompts, thread IDs, or unredacted evidence.
 
 ## Fixed v1.2 descriptive evidence
 
-![Fixed v1.2 descriptive comparison: grouped token composition and 12 of 12 checks in each treatment](assets/evidence/fixed-v1.2-performance.svg)
+<p align="center">
+  <img src="assets/evidence/fixed-v1.2-performance.svg" alt="Fixed v1.2 descriptive comparison with stacked child and root token bars plus separate 12 of 12 deterministic-check panels for both treatments." width="1000" />
+</p>
 
-Three precommitted pairs of four synthetic, read-only tasks recorded against Codex CLI 0.144.5:
+Three precommitted pairs of four fixed read-only tasks recorded against Codex CLI 0.144.5:
 
 | Recorded observation | Selective Terra/Sol policy | All-Sol/high baseline |
 | --- | ---: | ---: |
@@ -86,11 +90,13 @@ Three precommitted pairs of four synthetic, read-only tasks recorded against Cod
 | Total tokens | 728,706 | 768,912 |
 | Median wall duration | 45.094 s | 53.328 s |
 
-Child-token totals were nearly flat: **356,116** versus **356,494** (**-0.11% recorded**). Most of the recorded total-token difference occurred at the root; total tokens were **728,706** versus **768,912** (**-5.23% recorded**). These observations are order- and cache-confounded in a synthetic read-only suite. They are not causal evidence, a general-quality result, a cost result, a billing result, or a guarantee.
+Child-token totals were nearly flat: **356,116** versus **356,494** (**-0.11% recorded**). Most of the recorded total-token difference occurred at the root; total tokens were **728,706** versus **768,912** (**-5.23% recorded**). These observations are order- and cache-confounded in a fixed read-only suite. They are not causal evidence, a general-quality result, a cost result, a billing result, or a guarantee.
 
 As of **2026-07-17**, the recorded Standard API rate source listed Terra at a 50 index versus Sol at 100 across the recorded categories. This is a rate comparison only; recheck the source before publishing or making a decision. It excludes ChatGPT credits.
 
-![Dated API rate index: Terra 50 and Sol 100](assets/evidence/rate-index.svg)
+<p align="center">
+  <img src="assets/evidence/rate-index.svg" alt="Dated Standard API rate index: Terra 50 and Sol 100." width="1000" />
+</p>
 
 Read the sanitized machine-readable summaries: [fixed-v1.2 summary](public-evidence/fixed-v1.2-summary.json) and [rate index](public-evidence/rate-index-2026-07-17.json). These summaries are the public record; raw local evidence is not published. Read definitions, provenance, and limits in [Evidence](docs/EVIDENCE.md). Heldout-v2 is an unexecuted evaluation design with offline evaluator components implemented through Step 3. It is not frozen, authorized, or run and contributes no results here.
 

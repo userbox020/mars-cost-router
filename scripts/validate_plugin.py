@@ -62,7 +62,7 @@ EXPECTED_FALLBACKS = {
     "premium": [],
 }
 FIXED_CAVEATS = [
-    "Three precommitted pairs of four synthetic read-only tasks are summarized descriptively.",
+    "Three precommitted pairs of four fixed read-only tasks are summarized descriptively.",
     "No causal, general-quality, quality-equivalence, or quality-superiority conclusion is supported.",
     "No cost, billing, ChatGPT-credit, or savings conclusion is supported.",
     "Token and duration observations are order- and cache-confounded.",

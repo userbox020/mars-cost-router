@@ -1,12 +1,12 @@
 [CmdletBinding()]
 param(
-  [int]$StartFrame = 1800,
+  [int]$StartFrame = 1500,
   [int]$FrameCount = 60
 )
 
 $ErrorActionPreference = 'Stop'
 $root = $PSScriptRoot
-if ($FrameCount -lt 2 -or $StartFrame -lt 0 -or ($StartFrame + $FrameCount - 1) -gt 5399) { throw 'Choose a contiguous benchmark range within 0..5399 with at least two frames.' }
+if ($FrameCount -lt 2 -or $StartFrame -lt 0 -or ($StartFrame + $FrameCount - 1) -gt 4199) { throw 'Choose a contiguous benchmark range within 0..4199 with at least two frames.' }
 $browserCandidates = @(
   "$env:ProgramFiles\Microsoft\Edge\Application\msedge.exe",
   "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe",

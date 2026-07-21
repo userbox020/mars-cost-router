@@ -2,7 +2,7 @@
 
 ## Fixed v1.2: descriptive record
 
-The fixed-v1.2 record contains three precommitted pairs of four synthetic, read-only tasks using Codex CLI 0.144.5. The comparison is a selective Terra/Sol policy against an all-Sol/high baseline.
+The fixed-v1.2 record contains three precommitted pairs of four fixed read-only tasks using Codex CLI 0.144.5. The comparison is a selective Terra/Sol policy against an all-Sol/high baseline.
 
 | Recorded observation | Selective Terra/Sol policy | All-Sol/high baseline |
 | --- | ---: | ---: |
@@ -14,9 +14,11 @@ The fixed-v1.2 record contains three precommitted pairs of four synthetic, read-
 | Total tokens | 728,706 | 768,912 |
 | Median wall duration | 45.094 s | 53.328 s |
 
-Child-token totals were nearly flat: 356,116 versus 356,494, a recorded difference of -378 (-0.11%). Most of the recorded total-token difference occurred at the root: root totals were 372,590 versus 412,418. The total-token difference was -40,206 (-5.23%). Token and duration observations are order- and cache-confounded. They are descriptive of this fixed synthetic series only.
+Child-token totals were nearly flat: 356,116 versus 356,494, a recorded difference of -378 (-0.11%). Most of the recorded total-token difference occurred at the root: root totals were 372,590 versus 412,418. The total-token difference was -40,206 (-5.23%). Token and duration observations are order- and cache-confounded. They are descriptive of this fixed read-only series only.
 
-![Fixed v1.2 descriptive comparison](../assets/evidence/fixed-v1.2-performance.svg)
+<p align="center">
+  <img src="../assets/evidence/fixed-v1.2-performance.svg" alt="Fixed v1.2 descriptive comparison with stacked child and root token bars plus separate 12 of 12 deterministic-check panels for both treatments." width="1000" />
+</p>
 
 Do not turn this record into a claim of causal efficiency, general quality, equal quality, cost savings, billing savings, or ChatGPT-credit savings. Zero observed retries or reroutes is not proof that none occurred or that an effective route matched a request.
 
@@ -26,7 +28,9 @@ The [sanitized fixed-v1.2 machine-readable summary](../public-evidence/fixed-v1.
 
 As of **2026-07-17**, the recorded Standard API rate source lists Terra at a 50 index versus Sol at a 100 index across the recorded categories.
 
-![Terra and Sol rate index](../assets/evidence/rate-index.svg)
+<p align="center">
+  <img src="../assets/evidence/rate-index.svg" alt="Dated Standard API rate index: Terra 50 and Sol 100." width="1000" />
+</p>
 
 This is an index of listed Standard API rates, not an invoice or a prediction of a user’s bill. It excludes ChatGPT credits and must be rechecked against the current source before publication or use.
 

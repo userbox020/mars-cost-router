@@ -4,7 +4,7 @@
   <rect width="1200" height="750" rx="24" fill="#F8F4EC"/>
   <g font-family="Arial, sans-serif" fill="#17212B">
     <text x="65" y="64" font-family="Georgia, serif" font-size="30" font-weight="700">Fixed v1.2 · descriptive record</text>
-    <text x="65" y="102" font-size="16" fill="#52667B">Three precommitted pairs · synthetic read-only tasks · Codex CLI 0.144.5 · order- and cache-confounded</text>
+    <text x="65" y="102" font-size="16" fill="#52667B">Three precommitted pairs · fixed read-only tasks · Codex CLI 0.144.5 · order- and cache-confounded</text>
   </g>
   <rect x="65" y="125" width="750" height="515" rx="16" fill="#FCFAF5" stroke="#D7D0C4" stroke-width="2"/>
   <text x="95" y="165" font-family="Arial, sans-serif" font-size="21" font-weight="700" fill="#17212B">Token composition</text>

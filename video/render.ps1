@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
   [int]$StartFrame = 0,
-  [int]$EndFrame = 5399,
+  [int]$EndFrame = 4199,
   [string]$Output = "out\mars-cost-router-explainer.mp4",
   [string]$Narration,
   [string]$BackgroundAudio,
@@ -15,7 +15,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $root = $PSScriptRoot
 $fps = 30
-$lastFrame = 5399
+$lastFrame = 4199
 if ($StartFrame -lt 0 -or $EndFrame -gt $lastFrame -or $EndFrame -lt $StartFrame) { throw "Frame range must be within 0..$lastFrame." }
 & node (Join-Path $root 'verify.mjs')
 if ($LASTEXITCODE -ne 0) { throw 'Static verification failed.' }
