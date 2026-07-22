@@ -40,8 +40,9 @@ def main() -> int:
     print(f"\nSample requested {lane} spawn payload:")
     print(json.dumps(sample, indent=2))
     print(
-        "\nThis demo reads static files only. It does not spawn an agent, enforce "
-        "routing, observe an effective model, collect telemetry, or estimate savings."
+        "\nThis static demo reads policy files and prints requested settings. "
+        "Native provider/runtime metadata is the authority for effective execution; "
+        "billing and realized savings use separate evidence."
     )
     return 0
 

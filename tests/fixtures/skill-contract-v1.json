@@ -12,9 +12,9 @@
         "## Review and integrate"
       ],
       "required_anchors": [
-        "Instruction-driven and evidence-limited",
-        "does not enforce or independently verify",
-        "requested lane is not evidence",
+        "Trust boundary",
+        "evidence records requested settings",
+        "metadata remains the authority",
         "Root / no delegation first",
         "Premium if any trigger is present",
         "Economy only when all conditions hold",
@@ -37,7 +37,7 @@
         "Do not set `agent_type` or `service_tier`",
         "Do not ask a child to maintain project-wide state, commit, publish, deploy, access credentials, or perform production/destructive work unless the user has explicitly authorized that exact action",
         "State whether the task is complete. If partial or blocked, identify remaining work, verification gaps, and any root decision needed",
-        "Child status remains unverified until the root checks the work",
+        "The root checks child status and work before acceptance",
         "Root acceptance checklist",
         "describe only evidence actually observed"
       ]
@@ -50,7 +50,7 @@
         "## 4. Mixed/dependent task — root decomposition"
       ],
       "required_anchors": [
-        "request template, not a ready-to-run call",
+        "Every JSON block below is a request template",
         "Replace every `<PLACEHOLDER>` value",
         "Root/no-delegation decision",
         "Why this lane fits",
@@ -62,21 +62,42 @@
     "docs/INSTALL.md": {
       "ordered_sections": [],
       "required_anchors": [
+        "## Launch the current judge session",
+        "## Uninstall",
+        "Python **3.10+**",
+        "Node.js **24+**",
         "codex plugin list",
+        "codex features list",
+        "codex --enable multi_agent",
+        "-c 'features.multi_agent_v2.enabled=true'",
+        "-c 'features.multi_agent_v2.hide_spawn_agent_metadata=false'",
+        "Multi-agent V2 is under development",
+        "Fixed evidence and the tested release path use Codex CLI 0.144.5",
+        "provider-free on installed Codex CLI 0.144.6",
+        "`multi_agent` as stable and `true`",
+        "`multi_agent_v2` as under development and `true`",
+        "did not launch a child, runtime spawn, model request, or provider call",
+        "codex plugin remove mars-cost-router@mars-plugins",
+        "codex plugin marketplace remove mars-plugins",
+        "Refresh keeps the marketplace registered",
         "Start a new Codex session",
         "Do not silently substitute another model",
         "Return to root or user clarification",
         "Use the installed `mars-cost-router` skill",
+        "`$mars-cost-router:mars-cost-router` activates the skill",
         "[Playbooks](PLAYBOOKS.md)"
       ]
     },
     "docs/PRIVACY.md": {
       "ordered_sections": [],
       "required_anchors": [
-        "self-contained child message does not mean copying the root transcript",
+        "A self-contained child message includes only",
         "Keep a sensitive task at the root",
-        "Reference sensitive material rather than reproducing it",
-        "Mars Cost Router collects no telemetry",
+        "Child references may target only sanitized material",
+        "authorized for that child and bounded task",
+        "`fork_turns: \"none\"` prevents root-turn inheritance",
+        "It does not alter the child's filesystem, tool, network, provider, or permission access",
+        "Telemetry collection by Mars: **none**",
         "their own terms, settings, and policies"
       ]
     },
@@ -90,9 +111,10 @@
     "docs/EVIDENCE.md": {
       "ordered_sections": [],
       "required_anchors": [
-        "Fixed-v1.2 also predates and does not evaluate any 0.3.2 root-first decision ladder",
-        "cause-specific escalation",
-        "ownership or dependency rules",
+        "Record classification: **`descriptive-synthetic`**",
+        "Fixed-v1.2 covers the policy version before",
+        "Cause-specific escalation",
+        "ownership and dependency rules",
         "root acceptance guidance",
         "minimum-context privacy guidance",
         "delegation playbooks"
@@ -101,9 +123,83 @@
     "README.md": {
       "ordered_sections": [],
       "required_anchors": [
+        "## Judge quickstart",
+        "git clone https://github.com/userbox020/mars-cost-router.git",
+        "cd mars-cost-router",
+        "Python 3.10+",
+        "Node.js 24+",
+        "codex plugin marketplace add userbox020/mars-cost-router",
+        "codex plugin add mars-cost-router@mars-plugins",
+        "codex plugin list",
+        "codex features list",
+        "codex --enable multi_agent",
+        "-c 'features.multi_agent_v2.enabled=true'",
+        "-c 'features.multi_agent_v2.hide_spawn_agent_metadata=false'",
+        "Multi-agent V2 is under development",
+        "The fixed evidence and tested release path use Codex CLI 0.144.5",
+        "checked provider-free on an installed Codex CLI 0.144.6",
+        "`multi_agent` as stable and `true`",
+        "`multi_agent_v2` as under development and `true`",
+        "did not launch a child, runtime spawn, model request, or provider call",
+        "$mars-cost-router:mars-cost-router You are running from the cloned mars-cost-router repository root",
+        "Inspect the emitted spawn request",
+        "`model: \"gpt-5.6-terra\"`",
+        "`reasoning_effort: \"low\"`",
+        "`fork_turns: \"none\"`",
+        "python scripts/validate_plugin.py",
+        "python -m unittest discover -s tests -v",
+        "node video/verify.mjs",
+        "python -m compileall -q scripts tests",
+        "codex plugin marketplace upgrade mars-plugins",
+        "codex plugin remove mars-cost-router@mars-plugins",
+        "codex plugin marketplace remove mars-plugins",
+        "Record classification: **`descriptive-synthetic`**",
         "[Playbooks](docs/PLAYBOOKS.md)",
         "[Install and troubleshooting](docs/INSTALL.md)",
         "Watch the 0.3.1 walkthrough"
+      ]
+    },
+    "PROJECT_STORY.md": {
+      "ordered_sections": [],
+      "required_anchors": [
+        "git clone https://github.com/userbox020/mars-cost-router.git",
+        "cd mars-cost-router",
+        "codex plugin list",
+        "codex features list",
+        "codex --enable multi_agent",
+        "-c 'features.multi_agent_v2.enabled=true'",
+        "-c 'features.multi_agent_v2.hide_spawn_agent_metadata=false'",
+        "Multi-agent V2 is under development",
+        "Fixed evidence and the tested release path use Codex CLI 0.144.5",
+        "checked provider-free on installed Codex CLI 0.144.6",
+        "`multi_agent` as stable and `true`",
+        "`multi_agent_v2` as under development and `true`",
+        "did not launch a child, runtime spawn, model request, or provider call",
+        "`$mars-cost-router:mars-cost-router`",
+        "python scripts/validate_plugin.py",
+        "python -m unittest discover -s tests -v",
+        "node video/verify.mjs",
+        "python -m compileall -q scripts tests",
+        "Record classification: **`descriptive-synthetic`**"
+      ]
+    },
+    "demo/TERMINAL_COMMANDS.md": {
+      "ordered_sections": [],
+      "required_anchors": [
+        "version-labeled 0.3.1 presentation",
+        "current judge path",
+        "cloned repository root",
+        "codex features list",
+        "codex --enable multi_agent",
+        "-c 'features.multi_agent_v2.enabled=true'",
+        "-c 'features.multi_agent_v2.hide_spawn_agent_metadata=false'",
+        "Multi-agent V2 is under development",
+        "fixed evidence and tested release path use Codex CLI 0.144.5",
+        "provider-free on installed Codex CLI 0.144.6",
+        "`multi_agent` as stable and `true`",
+        "`multi_agent_v2` as under development and `true`",
+        "no child, runtime spawn, model request, or provider call was made",
+        "`$mars-cost-router:mars-cost-router`"
       ]
     }
   }

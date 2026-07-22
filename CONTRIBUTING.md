@@ -9,10 +9,12 @@ raw protocol captures, and evaluation evidence.
    every lane and keep final review at the root.
 3. Run `python scripts/validate_plugin.py` and
    `python -m unittest discover -s tests -v`.
-4. Describe user-visible changes and claim limitations in the pull request.
+4. Describe user-visible changes and their evidence scope in the pull request.
 
-Do not add hooks, MCP servers, executable plugin code, runtime telemetry, or
-claims of actual routing, model enforcement, quality equivalence, or savings.
+Keep the plugin surface instruction-only: metadata, policy, and skill. Public
+claims must identify requested settings, treat provider/runtime metadata as the
+authority for effective execution, and reserve billing, realized savings, and
+comparative quality conclusions for supporting evidence.
 By contributing, you agree that your contribution is licensed under the MIT
 License.
 

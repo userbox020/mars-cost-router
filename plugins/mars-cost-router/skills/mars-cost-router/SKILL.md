@@ -5,10 +5,9 @@ description: Choose explicit Codex model, reasoning, and context settings for wo
 
 # Mars Cost Router
 
-> **Instruction-driven and evidence-limited:** this skill advises the root model
-> to set native spawn fields. It does not enforce or independently verify those
-> settings. A requested lane is not evidence of the child's effective model or
-> reasoning effort; inspect native child metadata when that distinction matters.
+> **Trust boundary:** this instruction-driven skill advises the root model to set
+> native spawn fields. Its evidence records requested settings; native child
+> metadata remains the authority for effective model and reasoning effort.
 
 Use this skill from a Sol or Terra root running Codex multi-agent V2. Delegation
 is optional.
@@ -161,8 +160,8 @@ bounded.
 
 ## Optional child return contracts
 
-These are optional requested formats. The package does not validate or enforce
-a child response shape. Choose one only when it makes the handoff clearer.
+These optional requested formats can make a handoff clearer. The root validates
+the native child response against the task's acceptance criteria.
 
 ### Read-only locator
 
@@ -183,8 +182,8 @@ For implementation work, request an edit handoff or change summary containing:
 
 For implementation or dependent work, request: `State whether the task is
 complete. If partial or blocked, identify remaining work, verification gaps, and
-any root decision needed.` Child status remains unverified until the root checks
-the work; it is not proof of completion.
+any root decision needed.` The root checks child status and work before
+acceptance.
 
 ### Review
 

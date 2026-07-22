@@ -5,7 +5,7 @@ labels: [bug]
 body:
   - type: markdown
     attributes:
-      value: Do not include credentials, private prompts, or raw session data.
+      value: Submit a sanitized report with credentials, private prompts, and raw session data removed.
   - type: input
     id: version
     attributes:

@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import shlex
 import stat
 import sys
 from pathlib import Path
@@ -26,13 +27,15 @@ PLAYBOOKS_PATH = ROOT / "docs/PLAYBOOKS.md"
 INSTALL_PATH = ROOT / "docs/INSTALL.md"
 PRIVACY_PATH = ROOT / "docs/PRIVACY.md"
 README_PATH = ROOT / "README.md"
+PROJECT_STORY_PATH = ROOT / "PROJECT_STORY.md"
+TERMINAL_COMMANDS_PATH = ROOT / "demo/TERMINAL_COMMANDS.md"
 VERSION = "0.3.2"
 REPOSITORY_URL = "https://github.com/userbox020/mars-cost-router"
 HOMEPAGE_URL = f"{REPOSITORY_URL}#readme"
 LONG_DESCRIPTION = (
-    "Independent and unofficial; Mars is the project name, not a model. "
-    "Adds a delegation skill with explicit economy, balanced, and premium model, "
-    "effort, and context settings for Codex."
+    "Independent, unofficial delegation guidance; Mars is the project brand. "
+    "Adds explicit economy, balanced, and premium model, effort, and context "
+    "settings for Codex."
 )
 
 EXPECTED_PLUGIN_FILES = {
@@ -82,6 +85,21 @@ OFFICIAL_RATE_URLS = [
     "https://developers.openai.com/api/docs/models/gpt-5.6-sol",
     "https://developers.openai.com/api/docs/models/gpt-5.6-terra",
 ]
+EXPECTED_V2_LAUNCH = (
+    "codex",
+    "--enable",
+    "multi_agent",
+    "-c",
+    "features.multi_agent_v2.enabled=true",
+    "-c",
+    "features.multi_agent_v2.hide_spawn_agent_metadata=false",
+)
+V2_LAUNCH_GUIDES = (
+    "README.md",
+    "PROJECT_STORY.md",
+    "docs/INSTALL.md",
+    "demo/TERMINAL_COMMANDS.md",
+)
 
 
 class ValidationError(ValueError):
@@ -188,6 +206,8 @@ def _validate_tree() -> None:
         INSTALL_PATH,
         PRIVACY_PATH,
         README_PATH,
+        PROJECT_STORY_PATH,
+        TERMINAL_COMMANDS_PATH,
     ) + tuple(ROOT / relative for relative in REQUIRED_EVIDENCE_ASSETS)
     missing = [str(path.relative_to(ROOT)) for path in required if not path.is_file()]
     if missing:
@@ -385,6 +405,44 @@ def _validate_contract_fixture(fixture: Any, sources: dict[str, str]) -> None:
         for anchor in anchors:
             if re.sub(r"\s+", " ", anchor) not in normalized_source:
                 raise ValidationError(f"contract anchor is missing from {relative}: {anchor}")
+
+
+def _codex_shell_commands(source: str, relative: str) -> list[tuple[str, ...]]:
+    commands: list[tuple[str, ...]] = []
+    for block in re.findall(r"```sh\n(.*?)\n```", source, re.DOTALL):
+        unfolded = re.sub(r"\\\r?\n[ \t]*", " ", block)
+        for line in unfolded.splitlines():
+            command = line.strip()
+            if not command or command.startswith("#"):
+                continue
+            try:
+                tokens = tuple(shlex.split(command, posix=True))
+            except ValueError as exc:
+                raise ValidationError(f"invalid shell command in {relative}: {exc}") from exc
+            if tokens and tokens[0] == "codex":
+                commands.append(tokens)
+    return commands
+
+
+def _validate_v2_launch_guides(sources: dict[str, str]) -> None:
+    for relative in V2_LAUNCH_GUIDES:
+        commands = _codex_shell_commands(sources[relative], relative)
+        for command in commands:
+            parent_v2_enable = any(
+                command[index : index + 2] == ("--enable", "multi_agent_v2")
+                for index in range(len(command) - 1)
+            )
+            nested_v2_override = any(
+                token.startswith("features.multi_agent_v2.") for token in command
+            )
+            if parent_v2_enable and nested_v2_override:
+                raise ValidationError(
+                    f"{relative} combines parent multi_agent_v2 enablement with nested V2 overrides"
+                )
+        if commands.count(EXPECTED_V2_LAUNCH) != 1:
+            raise ValidationError(
+                f"{relative} must contain exactly one table-shaped V2 launch command"
+            )
 
 
 def _parse_frontmatter(skill: str) -> dict[str, str]:
@@ -730,6 +788,10 @@ def _validate_public_files() -> int:
         "GPT 5.6 " + "Mars",
     )
     files = [path for path in _iter_public_tree() if path.is_file()]
+    activation_prefix = ("$" + "mars-cost-router").encode("utf-8")
+    bare_activation = re.compile(
+        re.escape(activation_prefix) + rb"(?!:mars-cost-router\b)"
+    )
     for path in files:
         try:
             content = path.read_bytes()
@@ -738,6 +800,10 @@ def _validate_public_files() -> int:
         for label, pattern in patterns.items():
             if pattern.search(content):
                 raise ValidationError(f"{label} found in {path.relative_to(ROOT)}")
+        if bare_activation.search(content):
+            raise ValidationError(
+                f"unqualified Mars skill activation found in {path.relative_to(ROOT)}"
+            )
         lowered = content.lower()
         for claim in unsupported_claims:
             if claim.lower().encode("utf-8") in lowered:
@@ -754,7 +820,8 @@ def validate_repository(root: Path | None = None) -> dict[str, int | str]:
 
     global ROOT, PLUGIN_ROOT, MARKETPLACE_PATH, MANIFEST_PATH, POLICY_PATH, SKILL_PATH
     global FIXED_SUMMARY_PATH, RATE_INDEX_PATH, PLAYBOOKS_PATH, INSTALL_PATH
-    global PRIVACY_PATH, README_PATH, CONTRACT_FIXTURE_PATH
+    global PRIVACY_PATH, README_PATH, PROJECT_STORY_PATH, TERMINAL_COMMANDS_PATH
+    global CONTRACT_FIXTURE_PATH
     if root is not None:
         ROOT = Path(root).resolve()
         PLUGIN_ROOT = ROOT / PLUGIN_REL
@@ -769,6 +836,8 @@ def validate_repository(root: Path | None = None) -> dict[str, int | str]:
         INSTALL_PATH = ROOT / "docs/INSTALL.md"
         PRIVACY_PATH = ROOT / "docs/PRIVACY.md"
         README_PATH = ROOT / "README.md"
+        PROJECT_STORY_PATH = ROOT / "PROJECT_STORY.md"
+        TERMINAL_COMMANDS_PATH = ROOT / "demo/TERMINAL_COMMANDS.md"
 
     _validate_tree()
     marketplace = _load_json(MARKETPLACE_PATH)
@@ -789,11 +858,14 @@ def validate_repository(root: Path | None = None) -> dict[str, int | str]:
         ),
         "docs/EVIDENCE.md": (ROOT / "docs/EVIDENCE.md").read_text(encoding="utf-8"),
         "README.md": README_PATH.read_text(encoding="utf-8"),
+        "PROJECT_STORY.md": PROJECT_STORY_PATH.read_text(encoding="utf-8"),
+        "demo/TERMINAL_COMMANDS.md": TERMINAL_COMMANDS_PATH.read_text(encoding="utf-8"),
     }
     marketplace_plugin = _validate_marketplace(marketplace)
     manifest = _validate_manifest(manifest)
     policy_lanes = _validate_policy(policy)
     _validate_contract_fixture(contract_fixture, sources)
+    _validate_v2_launch_guides(sources)
     _validate_skill(sources["plugins/mars-cost-router/skills/mars-cost-router/SKILL.md"], policy_lanes)
     _validate_public_guides(sources["docs/PLAYBOOKS.md"], policy_lanes)
     _validate_fixed_summary(fixed_summary)

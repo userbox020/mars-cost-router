@@ -22,5 +22,5 @@ body:
     attributes:
       label: Boundaries
       options:
-        - label: This request does not depend on hooks, MCP, runtime telemetry, secrets, or private evidence.
+        - label: This request fits the static metadata, policy, and skill package and uses public, sanitized evidence.
           required: true

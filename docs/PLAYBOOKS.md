@@ -1,11 +1,12 @@
 # Delegation playbooks
 
-These are adaptable guidance for requested calls. They do not enforce a route or
-prove completion, effective settings, or runtime behavior.
+These playbooks provide adaptable guidance for requested calls. The root verifies
+completion, and native provider/runtime metadata supplies effective execution
+detail.
 
-Every JSON block below is a request template, not a ready-to-run call. Replace
-every `<PLACEHOLDER>` value with bounded, repository-specific content before
-spawning, then review the complete request at the root.
+Every JSON block below is a request template. Replace every `<PLACEHOLDER>` value
+with bounded, repository-specific content before spawning; that review turns the
+template into a ready request.
 
 ## 1. Bounded read-only locator — Economy
 

@@ -29,5 +29,5 @@
     <text x="260" y="345">inspect as evidence</text>
   </g>
   <text x="55" y="55" font-family="Georgia, serif" font-size="29" font-weight="700" fill="#17212B">Requested settings flow through the root</text>
-  <text x="55" y="82" font-family="Arial, sans-serif" font-size="16" fill="#52667B">No executable hook · no call rewriting · root remains accountable</text>
+  <text x="55" y="82" font-family="Arial, sans-serif" font-size="16" fill="#52667B">Static instruction package · native calls stay root-owned · root remains accountable</text>
 </svg>

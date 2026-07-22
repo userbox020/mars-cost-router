@@ -1,8 +1,10 @@
 # Privacy and security
 
-## Package boundary
+## Package trust boundary
 
-Mars Cost Router has no runtime hooks, executable runtime, receipt store, telemetry collector, or mutable project-wide state. It is an instruction-driven skill and policy, not an enforcement layer.
+Mars Cost Router is a static instruction skill, versioned policy, and metadata
+package. Runtime hooks, executable code, receipts, telemetry collection, and
+mutable project-wide state stay outside its package surface.
 
 ## Safe delegation inputs
 
@@ -14,19 +16,22 @@ Mars Cost Router has no runtime hooks, executable runtime, receipt store, teleme
 
 ## Minimum-necessary context
 
-- A self-contained child message does not mean copying the root transcript. Give
-  only the objective, scope, relevant facts, constraints, and acceptance criteria
-  needed for the bounded task.
+- A self-contained child message includes only the objective, scope, relevant
+  facts, constraints, and acceptance criteria needed for the bounded task; the
+  root transcript stays at the root.
 - Keep a sensitive task at the root when redaction or minimization would break
   correctness.
-- Reference sensitive material rather than reproducing it where the child can
-  complete the task safely without the contents.
+- Child references may target only sanitized material that the user has
+  authorized for that child and bounded task.
+- `fork_turns: "none"` prevents root-turn inheritance. It does not alter the
+  child's filesystem, tool, network, provider, or permission access; constrain
+  and authorize those capabilities separately.
 
 ## Host and provider boundary
 
-Mars Cost Router collects no telemetry. Codex, its host environment, and model
-providers may process or retain task content under their own terms, settings,
-and policies; Mars does not control those systems.
+Telemetry collection by Mars: **none**. Codex, its host environment, and model
+providers govern task-content processing and retention under their own terms,
+settings, and policies.
 
 ## Evidence hygiene
 
@@ -34,4 +39,6 @@ Local evaluation artifacts can contain thread identifiers, runtime metadata, or 
 
 ## What to verify
 
-The root should inspect child results against acceptance criteria and run final validation. If a route’s effective settings matter, inspect native metadata where available; never infer effective settings solely from the requested payload.
+The root should inspect child results against acceptance criteria and run final
+validation. Requested payloads document intent; native metadata, where
+available, supplies effective runtime detail.

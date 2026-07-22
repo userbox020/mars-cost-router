@@ -7,7 +7,11 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.validate_plugin import ValidationError, validate_repository
+from scripts.validate_plugin import (
+    ValidationError,
+    _validate_v2_launch_guides,
+    validate_repository,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -18,6 +22,12 @@ SKILL = Path("plugins/mars-cost-router/skills/mars-cost-router/SKILL.md")
 FIXTURE = Path("tests/fixtures/skill-contract-v1.json")
 FIXED_SUMMARY = Path("public-evidence/fixed-v1.2-summary.json")
 PLAYBOOKS = Path("docs/PLAYBOOKS.md")
+V2_LAUNCH_GUIDES = (
+    Path("README.md"),
+    Path("PROJECT_STORY.md"),
+    Path("docs/INSTALL.md"),
+    Path("demo/TERMINAL_COMMANDS.md"),
+)
 CURRENT_VERSION = "0.3.2"
 WALKTHROUGH_VERSION = "0.3.1"
 
@@ -85,6 +95,8 @@ class PluginValidationTests(unittest.TestCase):
                 "docs/ARCHITECTURE.md",
                 "docs/EVIDENCE.md",
                 "README.md",
+                "PROJECT_STORY.md",
+                "demo/TERMINAL_COMMANDS.md",
             },
             set(fixture["files"]),
         )
@@ -122,6 +134,42 @@ class PluginValidationTests(unittest.TestCase):
             .replace(second, first, 1)
             .replace("SECTION_SWAP", second, 1),
         )
+        for relative in (
+            Path("README.md"),
+            Path("PROJECT_STORY.md"),
+            Path("docs/EVIDENCE.md"),
+        ):
+            with self.subTest(classification=relative):
+                self.assert_text_rejected(
+                    relative,
+                    lambda text: text.replace(
+                        "Record classification: **`descriptive-synthetic`**.",
+                        "Record classification: descriptive.",
+                        1,
+                    ),
+                )
+
+        sources = {
+            relative.as_posix(): (ROOT / relative).read_text(encoding="utf-8")
+            for relative in V2_LAUNCH_GUIDES
+        }
+        bad_combination = dict(sources)
+        bad_combination["README.md"] = bad_combination["README.md"].replace(
+            "codex --enable multi_agent \\",
+            "codex --enable multi_agent " + "--enable multi_" + "agent_v2 \\",
+            1,
+        )
+        with self.assertRaisesRegex(ValidationError, "combines parent multi_agent_v2"):
+            _validate_v2_launch_guides(bad_combination)
+
+        missing_table_enable = dict(sources)
+        missing_table_enable["README.md"] = missing_table_enable["README.md"].replace(
+            "features.multi_agent_v2.enabled=true",
+            "features.multi_agent_v2.enabled=false",
+            1,
+        )
+        with self.assertRaisesRegex(ValidationError, "table-shaped V2 launch command"):
+            _validate_v2_launch_guides(missing_table_enable)
 
     def test_skill_lane_table_and_templates_follow_policy(self) -> None:
         policy = json.loads((ROOT / POLICY).read_text(encoding="utf-8"))
@@ -212,6 +260,7 @@ class PluginValidationTests(unittest.TestCase):
 
     def test_rejects_evidence_hash_arithmetic_and_caveat_mutations(self) -> None:
         mutations = {
+            "status": lambda value: value.__setitem__("status", "descriptive"),
             "hash": lambda value: value.__setitem__(
                 "frozen_suite_aggregate_sha256", "0" * 64
             ),
@@ -227,6 +276,7 @@ class PluginValidationTests(unittest.TestCase):
     def test_rejects_unsafe_claim_secret_and_local_path(self) -> None:
         additions = (
             "without " + "compromising quality",
+            "$" + "mars-cost-router",
             "sk-" + "x" * 32,
             "C:" + "/Us" + "ers/example/private",
         )

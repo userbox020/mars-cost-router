@@ -5,7 +5,8 @@
 > **An independent, instruction-driven delegation policy for Codex.**
 > Route by risk and effort; verify at the root.
 
-> **Unofficial:** Mars Cost Router is not affiliated with or endorsed by OpenAI. “Mars” is this project's brand, not a model.
+> **Independent and unofficial:** “Mars” is this project's brand. OpenAI is the
+> authority for Codex, model, and provider behavior.
 
 [![Validate](https://github.com/userbox020/mars-cost-router/actions/workflows/validate.yml/badge.svg)](https://github.com/userbox020/mars-cost-router/actions/workflows/validate.yml) ![Version 0.3.2](https://img.shields.io/badge/version-0.3.2-AD4C32?style=flat-square) ![Tested with Codex CLI 0.144.5](https://img.shields.io/badge/tested-Codex%20CLI%200.144.5-27374D?style=flat-square) ![Instruction-only](https://img.shields.io/badge/mode-Instruction--only-536B55?style=flat-square) ![MIT](https://img.shields.io/badge/license-MIT-E3B341?style=flat-square)
 
@@ -13,16 +14,99 @@ Mars Cost Router is a small local plugin with a three-lane policy for bounded su
 
 Project: [userbox020/mars-cost-router](https://github.com/userbox020/mars-cost-router)
 
-**Build Week judges:** [Read the Project Story and verification path](PROJECT_STORY.md).
+**Build Week judges:** follow the quickstart below, then read the
+[Project Story](PROJECT_STORY.md).
 
-## Quickstart
+## Judge quickstart
+
+```sh
+git clone https://github.com/userbox020/mars-cost-router.git
+cd mars-cost-router
+```
+
+Keep this shell in the cloned repository root for the install, launch, prompt,
+and validation steps below. Local package validation requires Python 3.10+.
+Node.js 24+ is required only for video-source verification and is optional for
+the core validator, unit tests, and compile check.
+
+### 1. Install, list, and inspect features
 
 ```sh
 codex plugin marketplace add userbox020/mars-cost-router
 codex plugin add mars-cost-router@mars-plugins
+codex plugin list
+codex features list
 ```
 
-Start a **new Codex session**, open the plugin browser or `@` surface, and select Mars Cost Router. In surfaces that expose Codex skills, `$mars-cost-router` is the skill syntax. Surface availability can vary by Codex version and interface.
+Confirm that the list shows `mars-cost-router@mars-plugins` at **0.3.2**, then
+launch a **new interactive Codex session from the cloned repository root** so
+discovery reloads the installed plugin:
+
+```sh
+codex --enable multi_agent \
+  -c 'features.multi_agent_v2.enabled=true' \
+  -c 'features.multi_agent_v2.hide_spawn_agent_metadata=false'
+```
+
+Multi-agent V2 is under development and is required for the five-field spawn
+surface used by this walkthrough. The fixed evidence and tested release path use
+Codex CLI 0.144.5. Separately, this exact command's feature configuration and
+`codex features list` were checked provider-free on an installed Codex CLI
+0.144.6. The provider-free check reported `multi_agent` as stable and `true`, and
+`multi_agent_v2` as under development and `true`. That check did not launch a
+child, runtime spawn, model request, or provider call. Open the plugin browser or
+`@` surface and select **Mars Cost Router**. In interfaces that expose skills,
+activate it in a prompt with `$mars-cost-router:mars-cost-router`.
+
+### 2. Copy, paste, and run one bounded prompt
+
+```text
+$mars-cost-router:mars-cost-router You are running from the cloned mars-cost-router repository root. For this bounded demonstration, delegate one read-only child to inspect this clone's README.md and docs/INSTALL.md and report the repository-relative locations of the install, refresh, and uninstall instructions. Use a generic task label, send only the minimum necessary context, and require the child not to delegate or spawn another agent. Do not edit files, access credentials, use the network, commit, or publish. At the root, verify every reported location in this clone before answering.
+```
+
+Inspect the emitted spawn request before authorizing or relying on the child. For
+this Economy-shaped read-only task, the request should contain all five fields: a
+generic `task_name`, a bounded self-contained `message`, `model: "gpt-5.6-terra"`,
+`reasoning_effort: "low"`, and `fork_turns: "none"`. The message should include
+the no-nested-delegation constraint. Provider/runtime metadata remains the
+authority for effective execution; the payload records the requested settings.
+
+### 3. Validate the checkout locally
+
+Run from the repository root:
+
+```sh
+python scripts/validate_plugin.py
+python -m unittest discover -s tests -v
+node video/verify.mjs
+python -m compileall -q scripts tests
+```
+
+The Node command verifies the video source and may be skipped for core package
+validation; the validator, unit tests, and compile check require Python 3.10+.
+
+### 4. Refresh, troubleshoot, or uninstall
+
+Refresh the marketplace entry and plugin, then start a new session:
+
+```sh
+codex plugin remove mars-cost-router@mars-plugins
+codex plugin marketplace upgrade mars-plugins
+codex plugin add mars-cost-router@mars-plugins
+codex plugin list
+```
+
+If discovery or version output is stale, confirm the marketplace entry, repeat
+the refresh sequence, and start another new session. Model availability,
+permissions, and authorization are separate runtime checks; return availability
+or authority problems to the root rather than substituting a lane. Refresh keeps
+the marketplace registered. A complete uninstall removes both the plugin and its
+marketplace entry:
+
+```sh
+codex plugin remove mars-cost-router@mars-plugins
+codex plugin marketplace remove mars-plugins
+```
 
 Use the concise [Playbooks](docs/PLAYBOOKS.md) for adaptable workflows, and see
 [Install and troubleshooting](docs/INSTALL.md) for setup, refresh, discovery,
@@ -34,11 +118,11 @@ availability, and permission guidance.
 | --- | --- |
 | **Decision-first lane policy** | Root/no-delegation comes first; Premium risk takes precedence, Economy requires every low-risk condition, and Balanced is the delegated default. |
 | **Bounded handoffs** | Self-contained messages define one objective, scope, acceptance criteria, and an optional reviewable return shape. |
-| **Cause-aware recovery** | The root distinguishes weak or conflicting evidence, malformed calls, missing authority, unavailable models, and increased risk without silent substitution. |
+| **Cause-aware recovery** | The root distinguishes weak or conflicting evidence, malformed calls, missing authority, unavailable models, and increased risk through explicit reviewed decisions. |
 | **Owned decomposition** | The guidance avoids overlapping parallel writer scopes, waits for reviewed prerequisites, and keeps final integration at the root. |
 | **Root acceptance** | The root inspects returned evidence, resolves conflicts, and runs final verification before making final claims. |
 | **Practical playbooks** | Four adaptable workflows cover bounded lookup, focused implementation, security review, and dependent work. |
-| **Inspectable, privacy-conscious package** | A compact skill and versioned policy use generic labels and minimum-necessary context without adding a runtime. |
+| **Inspectable, privacy-conscious package** | A compact skill and versioned policy use generic labels and minimum-necessary context in a static package. |
 | **Verified release path** | Local installation guidance, package validation, and hosted CI provide a direct path to inspect the release. |
 
 ## Three deliberate lanes
@@ -83,6 +167,8 @@ The video highlights explicit lanes, bounded requests, inspectable instruction-o
 
 ## Fixed v1.2 descriptive evidence
 
+Record classification: **`descriptive-synthetic`**.
+
 <p align="center">
   <img src="assets/evidence/fixed-v1.2-performance.svg" alt="Fixed v1.2 descriptive comparison with stacked child and root token bars plus separate 12 of 12 deterministic-check panels for both treatments." width="1000" />
 </p>
@@ -99,7 +185,7 @@ Three precommitted pairs of four fixed read-only tasks recorded against Codex CL
 | Total tokens | 728,706 | 768,912 |
 | Median wall duration | 45.094 s | 53.328 s |
 
-Both arms recorded **12 / 12** deterministic checks, with zero observed automatic retries and reroutes. Child-token totals were nearly flat: **356,116** versus **356,494** (**-0.11% recorded**). Most of the recorded total-token difference occurred at the root; total tokens were **728,706** versus **768,912** (**-5.23% recorded**). [Evidence](docs/EVIDENCE.md) contains the fixed-series scope, methodology, and claim boundaries.
+Both arms recorded **12 / 12** deterministic checks, with zero observed automatic retries and reroutes. Child-token totals were nearly flat: **356,116** versus **356,494** (**-0.11% recorded**). Most of the recorded total-token difference occurred at the root; total tokens were **728,706** versus **768,912** (**-5.23% recorded**). [Evidence](docs/EVIDENCE.md) contains the fixed-series scope, methodology, and interpretation.
 
 Mars’s published comparison normalizes dated Standard API listed rates as of **2026-07-17** to Terra **50** and Sol **100**. [Evidence](docs/EVIDENCE.md) covers the source, method, recheck guidance, and the distinction from ChatGPT credits.
 
@@ -109,12 +195,14 @@ Mars’s published comparison normalizes dated Standard API listed rates as of *
 
 The sanitized machine-readable [fixed-v1.2 summary](public-evidence/fixed-v1.2-summary.json) and [rate index](public-evidence/rate-index-2026-07-17.json) provide the compact public record. [Evidence](docs/EVIDENCE.md) links the definitions, provenance, boundaries, and Heldout-v2 context.
 
-## Reviewable boundaries
+## Evidence scope
 
-- Treat lane fields as instruction-driven **requested settings**, with the root checking each pending handoff before it starts.
-- Inspect native child metadata when available to distinguish requested settings from observed runtime detail.
-- Confirm model availability for the account, CLI, and environment before relying on a lane.
-- Use static validation for package conformance and runtime evidence for runtime observations.
+Lane fields are instruction-driven **requested settings**, checked by the root
+before each handoff. Native child metadata, when available, is the authority for
+effective runtime detail. Model availability is account-, CLI-, and
+environment-specific. Static validation establishes package conformance; the
+published fixed suite supplies descriptive outcomes for its stated tasks and
+runtime evidence supplies execution observations.
 
 ## Security and privacy by design
 

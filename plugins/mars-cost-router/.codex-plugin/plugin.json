@@ -18,7 +18,7 @@
   "interface": {
     "displayName": "Mars Cost Router",
     "shortDescription": "Guide bounded delegation with explicit settings",
-    "longDescription": "Independent and unofficial; Mars is the project name, not a model. Adds a delegation skill with explicit economy, balanced, and premium model, effort, and context settings for Codex.",
+    "longDescription": "Independent, unofficial delegation guidance; Mars is the project brand. Adds explicit economy, balanced, and premium model, effort, and context settings for Codex.",
     "developerName": "Mars Cost Router contributors",
     "category": "Productivity",
     "capabilities": [

@@ -6,8 +6,8 @@ Describe the bounded change and why it is needed.
 
 - [ ] `python scripts/validate_plugin.py`
 - [ ] `python -m unittest discover -s tests -v`
-- [ ] No secrets, local paths, private evidence, generated fixtures, or raw data
-- [ ] No hooks, MCP, executable plugin code, or runtime telemetry
+- [ ] Public tree is sanitized and limited to intended source and evidence files
+- [ ] Package surface remains metadata, policy, and skill only
 - [ ] Claims remain limited to requested settings and observed validation
 
 ## User-visible impact
