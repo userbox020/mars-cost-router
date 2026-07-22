@@ -1,4 +1,4 @@
-# Mars Cost Router
+# GPT 5.6 CODEX MARS PLUGIN
 
 ![Mars Cost Router — three deliberate routes meeting at a verified root](assets/brand/mars-cost-router-hero.svg)
 
